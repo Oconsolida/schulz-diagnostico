@@ -1139,6 +1139,171 @@
     .secnav-hint { display: none; }
   }
 
+  /* ===== ROADMAP ===== */
+  .roadmap {
+    position: relative;
+    margin-top: 72px;
+    padding: 0 20px;
+  }
+  .roadmap-line {
+    position: absolute;
+    top: 50%;
+    left: 40px;
+    right: 40px;
+    height: 3px;
+    background: repeating-linear-gradient(90deg, var(--border-strong) 0px, var(--border-strong) 12px, transparent 12px, transparent 24px);
+    transform: translateY(-50%);
+    z-index: 0;
+  }
+  .roadmap-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .roadmap-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 12px;
+  }
+  /* Odd items: content on top, pin on bottom */
+  .roadmap-item:nth-child(odd) {
+    padding-bottom: 100px;
+  }
+  /* Even items: pin on top, content on bottom */
+  .roadmap-item:nth-child(even) {
+    padding-top: 100px;
+    flex-direction: column-reverse;
+  }
+
+  .roadmap-pin {
+    width: 56px;
+    height: 68px;
+    position: relative;
+    flex-shrink: 0;
+    margin: 16px 0;
+  }
+  .roadmap-pin .pin-body {
+    width: 56px;
+    height: 56px;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(91, 69, 245, 0.2);
+    position: relative;
+    z-index: 2;
+  }
+  .roadmap-pin .pin-body.purple { background: linear-gradient(135deg, var(--purple), var(--purple-soft)); }
+  .roadmap-pin .pin-body.cyan { background: linear-gradient(135deg, var(--cyan), #2dd0d0); }
+
+  .roadmap-pin .pin-num {
+    transform: rotate(45deg);
+    color: #fff;
+    font-weight: 800;
+    font-size: 18px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .roadmap-pin .pin-dot {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 3px solid var(--purple);
+    z-index: 3;
+  }
+  .roadmap-pin .pin-body.cyan + .pin-dot,
+  .roadmap-item:nth-child(n+7) .pin-dot { border-color: var(--cyan); }
+
+  .roadmap-content {
+    max-width: 220px;
+  }
+  .roadmap-content h4 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    line-height: 1.25;
+  }
+  .roadmap-content p {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.45;
+  }
+  .roadmap-label {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 3px 8px;
+    border-radius: 999px;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .roadmap-label.sistema { background: var(--purple-tint); color: var(--purple); }
+  .roadmap-label.governanca { background: var(--cyan-tint); color: var(--cyan); }
+
+  /* Second row for items 5-8 */
+  .roadmap-row { margin-bottom: 24px; }
+  .roadmap-divider {
+    text-align: center;
+    padding: 32px 0;
+    position: relative;
+  }
+  .roadmap-divider span {
+    display: inline-block;
+    background: var(--bg);
+    padding: 6px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    position: relative;
+    z-index: 2;
+  }
+  .roadmap-divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0; right: 0;
+    height: 1px;
+    background: var(--border);
+  }
+
+  @media (max-width: 900px) {
+    .roadmap-grid { grid-template-columns: repeat(2, 1fr); }
+    .roadmap-item:nth-child(odd) { padding-bottom: 60px; }
+    .roadmap-item:nth-child(even) { padding-top: 60px; }
+    .roadmap-line { display: none; }
+  }
+  @media (max-width: 560px) {
+    .roadmap-grid { grid-template-columns: 1fr; }
+    .roadmap-item,
+    .roadmap-item:nth-child(odd),
+    .roadmap-item:nth-child(even) {
+      flex-direction: row !important;
+      text-align: left;
+      padding: 12px 0 !important;
+      gap: 16px;
+    }
+    .roadmap-content { max-width: 100%; }
+    .roadmap-pin { width: 44px; height: 44px; margin: 0; }
+    .roadmap-pin .pin-body { width: 44px; height: 44px; border-radius: 14px; transform: none; }
+    .roadmap-pin .pin-num { transform: none; font-size: 15px; }
+    .roadmap-pin .pin-dot { display: none; }
+  }
+
   /* ===== TV MODE TOGGLE ===== */
   .tv-toggle {
     position: fixed;
@@ -2180,63 +2345,114 @@
         <p class="lead reveal delay-2" style="margin-top: 20px;">A parametrização do Lincros e a revisão contratual da homologação devem rodar em paralelo, com data-alvo única de entrada em vigor.</p>
       </div>
 
-      <div class="ganhos-list">
-        <div class="ganho-item reveal">
-          <div class="ganho-check" style="background: var(--purple); font-size: 14px; font-weight: 800; color: #fff;">1</div>
-          <div class="ganho-text">
-            <h4>Parametrizar tabelas de frete</h4>
-            <p>Cadastro de tabelas por transportadora no Lincros, incluindo regra de cubagem específica de cada uma.</p>
+      <div class="roadmap reveal delay-3">
+
+        <!-- Row 1: Steps 1-4 -->
+        <div class="roadmap-row" style="position: relative;">
+          <div class="roadmap-line"></div>
+          <div class="roadmap-grid">
+            <div class="roadmap-item">
+              <div class="roadmap-content">
+                <span class="roadmap-label sistema">Sistema</span>
+                <h4>Parametrizar tabelas de frete</h4>
+                <p>Cadastro por transportadora no Lincros, incluindo regra de cubagem específica.</p>
+              </div>
+              <div class="roadmap-pin">
+                <div class="pin-body purple"><span class="pin-num">1</span></div>
+                <div class="pin-dot"></div>
+              </div>
+            </div>
+            <div class="roadmap-item">
+              <div class="roadmap-content">
+                <span class="roadmap-label sistema">Sistema</span>
+                <h4>Integrar TOTVS → Lincros</h4>
+                <p>Romaneio e CT-e. O Romaneio do TOTVS vira o Embarque no Lincros.</p>
+              </div>
+              <div class="roadmap-pin">
+                <div class="pin-body purple"><span class="pin-num">2</span></div>
+                <div class="pin-dot"></div>
+              </div>
+            </div>
+            <div class="roadmap-item">
+              <div class="roadmap-content">
+                <span class="roadmap-label sistema">Sistema</span>
+                <h4>Habilitar usuário externo Censos</h4>
+                <p>Perfil com baixa em tempo real e agendamento de cargas dedicadas.</p>
+              </div>
+              <div class="roadmap-pin">
+                <div class="pin-body purple"><span class="pin-num">3</span></div>
+                <div class="pin-dot"></div>
+              </div>
+            </div>
+            <div class="roadmap-item">
+              <div class="roadmap-content">
+                <span class="roadmap-label sistema">Sistema</span>
+                <h4>Configurar de/para EDI Proceda</h4>
+                <p>Mapeamento por transportadora entre nomenclatura própria e padrão Schulz.</p>
+              </div>
+              <div class="roadmap-pin">
+                <div class="pin-body purple"><span class="pin-num">4</span></div>
+                <div class="pin-dot"></div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="ganho-item reveal delay-1">
-          <div class="ganho-check" style="background: var(--purple); font-size: 14px; font-weight: 800; color: #fff;">2</div>
-          <div class="ganho-text">
-            <h4>Integrar TOTVS → Lincros</h4>
-            <p>Integração de Romaneio e CT-e. O Romaneio do TOTVS vira o Embarque no Lincros.</p>
+
+        <div class="roadmap-divider">
+          <span>Parametrização concluída → Governança em paralelo</span>
+        </div>
+
+        <!-- Row 2: Steps 5-8 -->
+        <div class="roadmap-row" style="position: relative;">
+          <div class="roadmap-line"></div>
+          <div class="roadmap-grid">
+            <div class="roadmap-item">
+              <div class="roadmap-content">
+                <span class="roadmap-label sistema">Sistema</span>
+                <h4>Ativar Ordem de Coleta</h4>
+                <p>Carga expressa via fluxo sistêmico, com peso, valor, destino e prazo vinculados.</p>
+              </div>
+              <div class="roadmap-pin">
+                <div class="pin-body purple"><span class="pin-num">5</span></div>
+                <div class="pin-dot"></div>
+              </div>
+            </div>
+            <div class="roadmap-item">
+              <div class="roadmap-content">
+                <span class="roadmap-label sistema">Sistema</span>
+                <h4>Ativar painel de divergências</h4>
+                <p>Controladoria ganha painel com status, responsável e prazo de tratativa.</p>
+              </div>
+              <div class="roadmap-pin">
+                <div class="pin-body purple"><span class="pin-num">6</span></div>
+                <div class="pin-dot"></div>
+              </div>
+            </div>
+            <div class="roadmap-item">
+              <div class="roadmap-content">
+                <span class="roadmap-label governanca">Governança</span>
+                <h4>Nova cláusula de homologação</h4>
+                <p>Transportadoras novas e renovadas assinam obrigação de publicar ocorrências.</p>
+              </div>
+              <div class="roadmap-pin">
+                <div class="pin-body cyan"><span class="pin-num">7</span></div>
+                <div class="pin-dot"></div>
+              </div>
+            </div>
+            <div class="roadmap-item">
+              <div class="roadmap-content">
+                <span class="roadmap-label governanca">Governança</span>
+                <h4>Aditivo para base existente</h4>
+                <p>Revisão das transportadoras já contratadas com cláusula de publicação de status.</p>
+              </div>
+              <div class="roadmap-pin">
+                <div class="pin-body cyan"><span class="pin-num">8</span></div>
+                <div class="pin-dot"></div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="ganho-item reveal">
-          <div class="ganho-check" style="background: var(--purple); font-size: 14px; font-weight: 800; color: #fff;">3</div>
-          <div class="ganho-text">
-            <h4>Habilitar usuário externo Censos</h4>
-            <p>Perfil com baixa em tempo real e solicitação de agendamento de cargas dedicadas.</p>
-          </div>
-        </div>
-        <div class="ganho-item reveal delay-1">
-          <div class="ganho-check" style="background: var(--purple); font-size: 14px; font-weight: 800; color: #fff;">4</div>
-          <div class="ganho-text">
-            <h4>Configurar de/para de ocorrências EDI Proceda</h4>
-            <p>Mapeamento por transportadora entre nomenclatura própria e o padrão Schulz no Lincros.</p>
-          </div>
-        </div>
-        <div class="ganho-item reveal">
-          <div class="ganho-check" style="background: var(--purple); font-size: 14px; font-weight: 800; color: #fff;">5</div>
-          <div class="ganho-text">
-            <h4>Ativar Ordem de Coleta para carga expressa</h4>
-            <p>Fluxo sistêmico substitui e-mail e WhatsApp, com peso, valor, destino e prazo vinculados.</p>
-          </div>
-        </div>
-        <div class="ganho-item reveal delay-1">
-          <div class="ganho-check" style="background: var(--purple); font-size: 14px; font-weight: 800; color: #fff;">6</div>
-          <div class="ganho-text">
-            <h4>Ativar painel de divergências</h4>
-            <p>Controladoria ganha painel com status, responsável e prazo de tratativa em substituição às planilhas.</p>
-          </div>
-        </div>
-        <div class="ganho-item reveal">
-          <div class="ganho-check" style="background: var(--cyan); font-size: 14px; font-weight: 800; color: #fff;">7</div>
-          <div class="ganho-text">
-            <h4>Nova cláusula de homologação em vigor</h4>
-            <p>Transportadoras renovadas e novas passam a assinar obrigação de publicar ocorrências na plataforma.</p>
-          </div>
-        </div>
-        <div class="ganho-item reveal delay-1">
-          <div class="ganho-check" style="background: var(--cyan); font-size: 14px; font-weight: 800; color: #fff;">8</div>
-          <div class="ganho-text">
-            <h4>Aditivo para transportadoras já contratadas</h4>
-            <p>Revisão da base existente com aditivo de cláusula de publicação de status.</p>
-          </div>
-        </div>
+
       </div>
     </div>
   </section>
