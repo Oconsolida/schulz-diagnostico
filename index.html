@@ -1639,6 +1639,42 @@
     text-align: center;
   }
 
+  /* TV: Escopo — 3 columns, full card becomes normal */
+  .tv-active .escopo-grid { grid-template-columns: repeat(3, 1fr); margin-top: 16px; }
+  .tv-active .escopo-card.full { grid-column: auto; }
+
+  /* TV: AS IS — side by side cards, tighter */
+  .tv-active .asis-card .num { display: none; }
+  .tv-active .asis-list li::before { top: 6px; width: 4px; height: 4px; }
+
+  /* TV: Compare — full width, minimal padding */
+  .tv-active .compare-row { grid-template-columns: 0.9fr 2fr 0.3fr 2fr; }
+
+  /* TV: Ganhos — 3-column grid */
+  .tv-active .ganhos-list {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  /* TV: Stats — tighter */
+  .tv-active .stat { padding: 20px; border-radius: 16px; }
+  .tv-active .stat-label { font-size: 12px; }
+  .tv-active .stat-sub { font-size: 10px; }
+
+  /* TV: KPIs — compact row */
+  .tv-active #kpis .stats { grid-template-columns: repeat(5, 1fr) !important; gap: 8px; }
+
+  /* TV: Section alt bg */
+  .tv-active section.alt { background: var(--bg-soft); }
+
+  /* TV: Header — much tighter, use row layout when possible */
+  .tv-active .section-header { margin-bottom: 16px; }
+  .tv-active .section-header .lead { margin-top: 8px !important; }
+
+  /* TV: Dores — 2-column grid for shorter lists */
+  .tv-active .dor-body { grid-template-columns: 1fr 40px 1fr; }
+
   /* TV reveal override — show everything immediately */
   .tv-active .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
 
