@@ -6,1484 +6,1397 @@
 <title>Diagnóstico Schulz S.A. — Consolida</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0a0f;
-    --bg-soft: #111118;
-    --bg-card: #16161f;
-    --bg-card-hover: #1c1c28;
-    --bg-elevated: #1e1e2a;
+    --bg: #fdfdfb;
+    --bg-soft: #f6f5f1;
+    --bg-card: #ffffff;
+    --bg-tint: #f2f0fb;
+    --bg-tint-cyan: #ecfafa;
+    --bg-tint-warn: #fdf2f4;
 
-    --border: rgba(255, 255, 255, 0.06);
-    --border-strong: rgba(255, 255, 255, 0.12);
-    --border-accent: rgba(0, 210, 190, 0.3);
+    --border: #ebe9e2;
+    --border-strong: #d6d3c8;
 
-    --accent: #00d2be;
-    --accent-dim: #009e8f;
-    --accent-glow: rgba(0, 210, 190, 0.15);
-    --accent-2: #6366f1;
-    --accent-2-glow: rgba(99, 102, 241, 0.12);
-    --warn: #f43f5e;
-    --warn-soft: rgba(244, 63, 94, 0.12);
-    --gold: #f59e0b;
-    --gold-soft: rgba(245, 158, 11, 0.1);
+    --purple: #5B45F5;
+    --purple-soft: #7a67f7;
+    --purple-tint: #ebe7ff;
+    --cyan: #00B8B8;
+    --cyan-soft: #2dd0d0;
+    --cyan-tint: #d9f5f5;
+    --warn: #e84a6b;
+    --warn-tint: #fbe6ec;
+    --success: #14a878;
 
-    --text: #f0f0f5;
-    --text-mid: #9ca3af;
-    --text-dim: #6b7280;
+    --text: #0e0e1a;
+    --text-mid: #4d4d5e;
+    --text-dim: #8a8a98;
 
-    --radius: 20px;
-    --radius-sm: 12px;
-    --shadow: 0 24px 80px -16px rgba(0, 0, 0, 0.6);
+    --max-w: 1180px;
+    --shadow-sm: 0 1px 2px rgba(14, 14, 26, 0.04), 0 1px 3px rgba(14, 14, 26, 0.04);
+    --shadow-md: 0 4px 12px rgba(14, 14, 26, 0.06), 0 2px 4px rgba(14, 14, 26, 0.04);
+    --shadow-lg: 0 20px 40px -16px rgba(91, 69, 245, 0.15), 0 8px 16px rgba(14, 14, 26, 0.04);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html {
-    scroll-snap-type: y mandatory;
-    scroll-behavior: smooth;
-    overflow-x: hidden;
-  }
+  html { scroll-behavior: smooth; }
 
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'DM Sans', system-ui, sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-weight: 400;
     line-height: 1.55;
-    -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
   }
 
-  /* Grain overlay */
-  body::after {
+  body::before {
     content: '';
     position: fixed;
     inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    background-image:
+      radial-gradient(ellipse 900px 700px at 10% 0%, rgba(91, 69, 245, 0.05), transparent 60%),
+      radial-gradient(ellipse 800px 600px at 90% 100%, rgba(0, 184, 184, 0.04), transparent 60%);
     pointer-events: none;
-    z-index: 9999;
-    opacity: 0.4;
+    z-index: 0;
   }
 
-  /* Progress */
+  main { position: relative; z-index: 2; }
+
   .progress {
     position: fixed;
     top: 0; left: 0;
-    height: 2px;
+    height: 3px;
     width: 0%;
-    background: linear-gradient(90deg, var(--accent), var(--accent-2));
-    z-index: 200;
-    transition: width 0.15s linear;
+    background: linear-gradient(90deg, var(--purple), var(--cyan));
+    z-index: 100;
+    transition: width 0.1s linear;
+    border-radius: 0 999px 999px 0;
   }
 
-  /* Top nav */
   .topnav {
     position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 20px 40px;
-    background: rgba(10, 10, 15, 0.7);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border-bottom: 1px solid var(--border);
+    gap: 28px;
+    padding: 12px 24px;
+    background: rgba(253, 253, 251, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: var(--shadow-md);
   }
   .topnav .logo {
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-weight: 700;
-    font-size: 15px;
-    letter-spacing: -0.01em;
-  }
-  .topnav .logo .mark {
-    width: 28px; height: 28px;
-    border-radius: 8px;
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
+    gap: 10px;
     font-weight: 800;
-    color: #fff;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    font-size: 15px;
+  }
+  .topnav .logo .dot {
+    width: 10px; height: 10px;
+    border-radius: 3px;
+    background: var(--cyan);
+    box-shadow: 0 0 0 3px rgba(0, 184, 184, 0.15);
   }
   .topnav .meta {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
     color: var(--text-dim);
-    letter-spacing: 0.08em;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
   }
-  .topnav .slide-indicator {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    color: var(--text-mid);
-    background: var(--bg-card);
-    padding: 6px 14px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-  }
-  .topnav .slide-indicator strong { color: var(--accent); }
-
-  @media (max-width: 768px) {
-    .topnav { padding: 16px 20px; }
+  @media (max-width: 720px) {
+    .topnav { gap: 14px; padding: 10px 18px; font-size: 12px; }
     .topnav .meta { display: none; }
   }
 
-  /* Sections as slides */
-  section {
-    min-height: 100vh;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-    position: relative;
+  .navdots {
+    position: fixed;
+    right: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 40;
     display: flex;
-    align-items: center;
-    padding: 120px 60px 80px;
-    overflow: hidden;
+    flex-direction: column;
+    gap: 14px;
   }
-
-  @media (max-width: 768px) {
-    section { padding: 100px 24px 60px; }
+  .navdots a {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(14, 14, 26, 0.15);
+    transition: all 0.3s ease;
+    position: relative;
   }
+  .navdots a:hover { background: var(--purple); transform: scale(1.4); }
+  .navdots a.active {
+    background: var(--purple);
+    box-shadow: 0 0 0 4px var(--purple-tint);
+    transform: scale(1.3);
+  }
+  .navdots a::before {
+    content: attr(data-label);
+    position: absolute;
+    right: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-mid);
+    background: var(--bg-card);
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    box-shadow: var(--shadow-sm);
+  }
+  .navdots a:hover::before { opacity: 1; }
+  @media (max-width: 1100px) { .navdots { display: none; } }
 
+  section {
+    position: relative;
+    padding: 140px 32px;
+    min-height: auto;
+  }
+  section.alt { background: var(--bg-soft); }
   .container {
-    max-width: 1280px;
+    max-width: var(--max-w);
     margin: 0 auto;
     width: 100%;
-    position: relative;
-    z-index: 2;
   }
 
-  /* Typography */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--purple);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    padding: 6px 14px;
+    background: var(--purple-tint);
+    border-radius: 999px;
+  }
+  .eyebrow.cyan { color: var(--cyan); background: var(--cyan-tint); }
+  .eyebrow.warn { color: var(--warn); background: var(--warn-tint); }
+
   h1, h2, h3, h4 {
-    font-family: 'Instrument Serif', Georgia, serif;
-    font-weight: 400;
-    letter-spacing: -0.02em;
-    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.08;
     color: var(--text);
   }
-  h1 { font-size: clamp(56px, 8vw, 110px); }
-  h2 { font-size: clamp(40px, 5.5vw, 72px); }
-  h3 { font-size: clamp(24px, 2.8vw, 34px); }
-  h4 { font-size: 20px; }
-
-  .mono {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--accent);
-    font-weight: 500;
-  }
+  h1 { font-size: clamp(48px, 7vw, 92px); }
+  h2 { font-size: clamp(34px, 4.8vw, 60px); }
+  h3 { font-size: clamp(20px, 2.2vw, 26px); font-weight: 700; }
+  h4 { font-size: 18px; font-weight: 700; }
 
   .lead {
-    font-size: clamp(17px, 1.6vw, 21px);
+    font-size: clamp(17px, 1.5vw, 20px);
     color: var(--text-mid);
-    max-width: 640px;
-    line-height: 1.65;
-    font-weight: 300;
+    max-width: 680px;
+    line-height: 1.6;
+    font-weight: 400;
   }
 
-  .accent-text {
-    background: linear-gradient(135deg, var(--accent) 0%, #4aeadb 50%, var(--accent-2) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  .italic { font-style: italic; }
-
-  /* ====== HERO ====== */
+  /* HERO */
   .hero {
+    min-height: 100vh;
+    display: flex;
     align-items: center;
-    justify-content: center;
-    text-align: center;
     padding-top: 0;
     padding-bottom: 0;
+    overflow: hidden;
   }
-  .hero-bg {
+  .hero-deco {
     position: absolute;
     inset: 0;
-    background:
-      radial-gradient(ellipse 80% 60% at 50% 40%, rgba(0, 210, 190, 0.06), transparent),
-      radial-gradient(ellipse 60% 50% at 80% 80%, rgba(99, 102, 241, 0.05), transparent);
+    background-image:
+      radial-gradient(circle at 20% 30%, var(--purple-tint), transparent 40%),
+      radial-gradient(circle at 80% 70%, var(--cyan-tint), transparent 40%);
+    opacity: 0.6;
   }
   .hero-grid {
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-    background-size: 100px 100px;
-    mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, #000, transparent 80%);
-    -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, #000, transparent 80%);
+      linear-gradient(rgba(14, 14, 26, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(14, 14, 26, 0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 80%);
   }
-  .hero-content {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 32px;
+  .hero-content { position: relative; z-index: 2; }
+  .hero h1 { margin-bottom: 28px; }
+  .hero h1 .accent {
+    background: linear-gradient(120deg, var(--purple) 0%, var(--cyan) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
-  .hero-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 20px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-strong);
-    border-radius: 999px;
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text-mid);
-  }
-  .hero-eyebrow .dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    animation: pulse 2s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--accent-glow); }
-    50% { opacity: 0.7; box-shadow: 0 0 0 8px transparent; }
-  }
-  .hero h1 { max-width: 900px; }
-  .hero .lead { text-align: center; margin: 0 auto; }
   .hero-meta {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    gap: 40px;
-    margin-top: 48px;
-    padding-top: 40px;
+    gap: 32px;
+    margin-top: 56px;
+    padding-top: 32px;
     border-top: 1px solid var(--border);
   }
-  .hero-meta-item {
-    text-align: center;
-  }
-  .hero-meta-item .label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--text-dim);
+  .hero-meta div { font-size: 13px; }
+  .hero-meta strong {
+    color: var(--purple);
+    display: block;
     margin-bottom: 6px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
   }
-  .hero-meta-item .value {
-    font-size: 14px;
-    color: var(--text-mid);
-    font-weight: 500;
-  }
+  .hero-meta span { color: var(--text-mid); font-size: 14px; font-weight: 500; }
 
-  .scroll-cue {
+  .scrollhint {
     position: absolute;
     bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
+    color: var(--text-dim);
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 12px;
-    color: var(--text-dim);
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    animation: float 3s ease-in-out infinite;
+    animation: bob 2.5s ease-in-out infinite;
   }
-  .scroll-cue .arrow {
+  .scrollhint .line {
     width: 1px;
-    height: 48px;
-    background: linear-gradient(180deg, var(--accent), transparent);
+    height: 40px;
+    background: linear-gradient(180deg, var(--purple), transparent);
   }
-  @keyframes float {
+  @keyframes bob {
     0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(10px); }
+    50% { transform: translateX(-50%) translateY(8px); }
   }
 
-  /* ====== STATS ====== */
-  .stats-grid {
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+  .reveal.delay-1 { transition-delay: 0.1s; }
+  .reveal.delay-2 { transition-delay: 0.2s; }
+  .reveal.delay-3 { transition-delay: 0.3s; }
+  .reveal.delay-4 { transition-delay: 0.4s; }
+
+  .stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-    margin-top: 72px;
-    border-radius: var(--radius);
-    overflow: hidden;
-    background: var(--border);
+    gap: 20px;
+    margin-top: 64px;
   }
-  @media (max-width: 768px) { .stats-grid { grid-template-columns: 1fr; } }
-  .stat-cell {
-    background: var(--bg-card);
-    padding: 56px 40px;
-    text-align: center;
-    transition: background 0.4s;
-  }
-  .stat-cell:hover { background: var(--bg-card-hover); }
-  .stat-number {
-    font-family: 'Instrument Serif', serif;
-    font-size: clamp(56px, 7vw, 88px);
-    line-height: 1;
-    color: var(--text);
-    margin-bottom: 12px;
-  }
-  .stat-number .unit {
-    font-size: 0.35em;
-    color: var(--accent);
-    vertical-align: super;
-    font-family: 'DM Mono', monospace;
-    font-weight: 500;
-  }
-  .stat-label {
-    font-size: 15px;
-    color: var(--text-mid);
-    font-weight: 500;
-  }
-  .stat-sub {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--text-dim);
-    margin-top: 8px;
-    letter-spacing: 0.05em;
-  }
+  @media (max-width: 720px) { .stats { grid-template-columns: 1fr; } }
 
-  /* Perfil tags */
-  .profiles {
+  .stat {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 36px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+  }
+  .stat:hover {
+    border-color: var(--purple);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+  .stat::after {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 140px; height: 140px;
+    background: radial-gradient(circle, var(--purple-tint), transparent 70%);
+    pointer-events: none;
+    opacity: 0.6;
+  }
+  .stat-num {
+    font-size: clamp(48px, 6vw, 72px);
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 10px;
+    letter-spacing: -0.04em;
+    position: relative;
+    z-index: 1;
+  }
+  .stat-num .unit { font-size: 0.4em; color: var(--purple); font-weight: 700;}
+  .stat-label { font-size: 14px; color: var(--text-mid); font-weight: 600; position: relative; z-index: 1;}
+  .stat-sub { font-size: 12px; color: var(--text-dim); margin-top: 6px; font-family: 'JetBrains Mono', monospace; position: relative; z-index: 1;}
+
+  .areas-row {
+    margin-top: 56px;
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 12px;
-    margin-top: 48px;
-    justify-content: center;
   }
-  .profile-tag {
-    padding: 14px 24px;
+  .areas-row .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-right: 8px;
+  }
+  .area-tag {
+    padding: 10px 18px;
     background: var(--bg-card);
-    border: 1px solid var(--border-strong);
+    border: 1px solid var(--border);
     border-radius: 999px;
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text-mid);
     font-weight: 500;
     transition: all 0.3s;
   }
-  .profile-tag:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: var(--accent-glow);
+  .area-tag:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
     transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 184, 184, 0.12);
   }
 
-  /* ====== ESCOPO ====== */
+  /* ESCOPO */
   .escopo-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    margin-top: 64px;
+    gap: 18px;
+    margin-top: 56px;
   }
-  @media (max-width: 768px) { .escopo-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 720px) { .escopo-grid { grid-template-columns: 1fr; } }
 
   .escopo-card {
     background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 32px;
-    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    border-radius: 20px;
+    padding: 28px;
+    transition: all 0.3s ease;
     display: flex;
     gap: 20px;
     align-items: flex-start;
   }
   .escopo-card:hover {
-    border-color: var(--border-strong);
     transform: translateY(-2px);
-    box-shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.5);
+    box-shadow: var(--shadow-md);
   }
   .escopo-card.full {
     grid-column: 1 / -1;
-    border-color: rgba(244, 63, 94, 0.2);
-    background: linear-gradient(135deg, rgba(244, 63, 94, 0.04), var(--bg-card));
+    background: var(--bg-tint-warn);
+    border-color: rgba(232, 74, 107, 0.2);
   }
 
   .escopo-badge {
     flex-shrink: 0;
     padding: 6px 12px;
-    border-radius: 6px;
-    font-family: 'DM Mono', monospace;
+    border-radius: 999px;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 500;
-  }
-  .escopo-badge.dono { background: rgba(0, 210, 190, 0.1); color: var(--accent); border: 1px solid rgba(0, 210, 190, 0.2); }
-  .escopo-badge.gate { background: var(--accent-2-glow); color: var(--accent-2); border: 1px solid rgba(99, 102, 241, 0.2); }
-  .escopo-badge.ator { background: var(--gold-soft); color: var(--gold); border: 1px solid rgba(245, 158, 11, 0.2); }
-  .escopo-badge.struct { background: rgba(255,255,255,0.04); color: var(--text-mid); border: 1px solid var(--border); }
-  .escopo-badge.fora { background: var(--warn-soft); color: var(--warn); border: 1px solid rgba(244, 63, 94, 0.2); }
-
-  .escopo-text h4 {
-    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.1em;
     font-weight: 700;
-    font-size: 16px;
-    margin-bottom: 6px;
   }
-  .escopo-text p { font-size: 14px; color: var(--text-dim); line-height: 1.55; }
+  .escopo-badge.dono { background: var(--cyan-tint); color: var(--cyan); }
+  .escopo-badge.gate { background: var(--purple-tint); color: var(--purple); }
+  .escopo-badge.ator { background: #fef5e7; color: #c97e07; }
+  .escopo-badge.struct { background: #f0f0f0; color: var(--text-mid); }
+  .escopo-badge.fora { background: var(--warn-tint); color: var(--warn); }
 
-  /* ====== AS IS cards ====== */
-  .asis-cards { display: flex; flex-direction: column; gap: 24px; }
+  .escopo-text h4 { margin-bottom: 4px; }
+  .escopo-text p { font-size: 14px; color: var(--text-mid); line-height: 1.5; }
+
+  .section-header {
+    margin-bottom: 72px;
+    max-width: 760px;
+  }
+
+  .asis-cards { display: grid; gap: 24px; }
   .asis-card {
     background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 48px;
+    border-radius: 24px;
+    padding: 40px;
+    transition: all 0.4s ease;
     position: relative;
     overflow: hidden;
-    transition: all 0.4s;
   }
   .asis-card:hover {
-    border-color: var(--border-strong);
-    box-shadow: var(--shadow);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--purple);
   }
-  .asis-card .num {
+  .asis-card .area-num {
     position: absolute;
-    top: -20px; right: 32px;
-    font-family: 'Instrument Serif', serif;
-    font-size: 140px;
-    color: rgba(255, 255, 255, 0.02);
-    line-height: 1;
-    pointer-events: none;
+    top: 32px; right: 36px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
   }
-  .asis-card .tag {
+  .asis-card .area-tag-small {
     display: inline-block;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--purple);
     text-transform: uppercase;
     letter-spacing: 0.15em;
-    color: var(--accent);
-    margin-bottom: 16px;
-    padding: 6px 14px;
-    background: var(--accent-glow);
-    border-radius: 6px;
-    border: 1px solid rgba(0, 210, 190, 0.15);
-  }
-  .asis-card h3 {
     margin-bottom: 12px;
-    font-size: clamp(22px, 2.5vw, 30px);
+    padding: 6px 12px;
+    background: var(--purple-tint);
+    border-radius: 999px;
+    font-weight: 600;
   }
+  .asis-card h3 { margin-bottom: 8px; }
 
   .asis-twocol {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 40px;
-    margin-top: 32px;
+    gap: 32px;
+    margin-top: 28px;
   }
-  @media (max-width: 768px) { .asis-twocol { grid-template-columns: 1fr; } }
+  @media (max-width: 720px) { .asis-twocol { grid-template-columns: 1fr; } }
 
-  .asis-col h5 {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
+  .asis-col h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.1em;
     color: var(--text-dim);
-    margin-bottom: 20px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
-    font-weight: 500;
+    margin-bottom: 16px;
+    font-weight: 600;
   }
   .asis-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
   }
   .asis-list li {
-    font-size: 14px;
+    font-size: 14.5px;
     color: var(--text-mid);
     padding-left: 20px;
     position: relative;
-    line-height: 1.55;
+    line-height: 1.5;
   }
   .asis-list li::before {
     content: '';
     position: absolute;
-    left: 0; top: 8px;
+    left: 0; top: 9px;
     width: 6px; height: 6px;
     border-radius: 50%;
-    background: var(--accent);
-    opacity: 0.6;
+    background: var(--cyan);
   }
 
-  .alert-box {
-    margin-top: 28px;
-    padding: 18px 22px;
-    background: var(--warn-soft);
-    border: 1px solid rgba(244, 63, 94, 0.15);
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    color: #fca5a5;
+  .alert {
+    margin-top: 24px;
+    padding: 16px 20px;
+    background: var(--warn-tint);
+    border-radius: 14px;
+    font-size: 14px;
+    color: #b3304a;
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    line-height: 1.55;
+    line-height: 1.5;
+    font-weight: 500;
   }
-  .alert-box .icon {
+  .alert::before {
+    content: '!';
     flex-shrink: 0;
-    width: 20px; height: 20px;
+    width: 22px; height: 22px;
     border-radius: 50%;
     background: var(--warn);
     color: #fff;
     font-weight: 700;
-    font-size: 11px;
-    display: flex;
+    font-size: 12px;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
   }
 
-  /* ====== 7 DORES ====== */
+  /* 7 DORES */
   .dores-list {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 24px;
     margin-top: 56px;
   }
   .dor {
     background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 40px;
-    transition: all 0.4s;
+    border-radius: 24px;
+    padding: 36px;
+    transition: all 0.4s ease;
     position: relative;
   }
   .dor:hover {
-    border-color: var(--border-strong);
-    box-shadow: 0 12px 40px -8px rgba(0, 0, 0, 0.4);
+    border-color: var(--purple);
+    box-shadow: var(--shadow-md);
   }
   .dor.highlight {
-    border-color: var(--accent);
-    background: linear-gradient(135deg, rgba(0, 210, 190, 0.03), rgba(99, 102, 241, 0.03));
-    box-shadow: 0 0 0 1px var(--accent), 0 24px 60px -12px rgba(0, 210, 190, 0.1);
+    background: linear-gradient(135deg, rgba(91, 69, 245, 0.04), rgba(0, 184, 184, 0.04));
+    border-color: var(--purple);
+    border-width: 2px;
   }
   .dor-head {
     display: flex;
     align-items: flex-start;
     gap: 20px;
-    margin-bottom: 28px;
+    margin-bottom: 24px;
   }
   .dor-num {
     flex-shrink: 0;
-    width: 52px; height: 52px;
-    border-radius: 14px;
-    background: var(--bg-elevated);
-    border: 1px solid var(--border-strong);
+    width: 56px;
+    height: 56px;
+    border-radius: 18px;
+    background: var(--purple);
+    color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Instrument Serif', serif;
-    font-size: 24px;
-    color: var(--text);
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
   }
   .dor.highlight .dor-num {
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    border: none;
-    color: #fff;
+    background: linear-gradient(135deg, var(--purple), var(--cyan));
   }
   .dor-title { flex: 1; }
   .dor-title .scope {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
     color: var(--text-dim);
-    letter-spacing: 0.12em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     margin-bottom: 4px;
+    font-weight: 600;
   }
-  .dor-title h3 {
-    font-size: 22px;
-  }
+  .dor-title h3 { font-size: 22px; }
   .dor-flag {
     align-self: center;
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
-    background: var(--bg-elevated);
-    border: 1px solid var(--border-strong);
-    color: var(--text-mid);
-    padding: 6px 14px;
-    border-radius: 6px;
+    background: var(--purple-tint);
+    color: var(--purple);
+    padding: 6px 12px;
+    border-radius: 999px;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-weight: 500;
+    letter-spacing: 0.12em;
+    font-weight: 700;
     white-space: nowrap;
   }
   .dor.highlight .dor-flag {
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    border: none;
+    background: linear-gradient(135deg, var(--purple), var(--cyan));
     color: #fff;
   }
 
   .dor-body {
     display: grid;
-    grid-template-columns: 1fr 48px 1fr;
+    grid-template-columns: 1fr 60px 1fr;
     gap: 0;
     align-items: stretch;
+    margin-top: 8px;
   }
-  @media (max-width: 768px) { .dor-body { grid-template-columns: 1fr; gap: 12px; } }
+  @media (max-width: 720px) { .dor-body { grid-template-columns: 1fr; gap: 16px; } }
 
   .dor-col {
     padding: 24px;
-    border-radius: var(--radius-sm);
+    border-radius: 16px;
   }
-  .dor-col.asis {
-    background: var(--warn-soft);
-    border: 1px solid rgba(244, 63, 94, 0.1);
-  }
-  .dor-col.tobe {
-    background: rgba(0, 210, 190, 0.06);
-    border: 1px solid rgba(0, 210, 190, 0.1);
-  }
+  .dor-col.asis { background: var(--warn-tint); }
+  .dor-col.tobe { background: var(--cyan-tint); }
   .dor-col h5 {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
-    margin-bottom: 14px;
-    font-weight: 500;
+    letter-spacing: 0.12em;
+    margin-bottom: 12px;
+    font-weight: 700;
   }
   .dor-col.asis h5 { color: var(--warn); }
-  .dor-col.tobe h5 { color: var(--accent); }
-  .dor-col p { font-size: 14px; color: var(--text-mid); line-height: 1.6; }
+  .dor-col.tobe h5 { color: var(--cyan); }
+  .dor-col p { font-size: 14.5px; color: var(--text); line-height: 1.55; }
 
   .dor-arrow {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--accent);
-    font-size: 24px;
+    color: var(--purple);
+    font-size: 28px;
+    font-weight: 800;
   }
-  @media (max-width: 768px) { .dor-arrow { display: none; } }
+  @media (max-width: 720px) {
+    .dor-arrow { display: none; }
+  }
 
   .dor-pendencia {
     margin-top: 16px;
     padding: 12px 18px;
-    background: var(--gold-soft);
-    border: 1px solid rgba(245, 158, 11, 0.15);
-    border-radius: 8px;
-    font-size: 12px;
-    color: var(--gold);
+    background: #fef5e7;
+    border-radius: 10px;
+    font-size: 13px;
+    color: #c97e07;
     display: flex;
     align-items: center;
     gap: 10px;
-    font-family: 'DM Mono', monospace;
-    letter-spacing: 0.02em;
+    font-weight: 500;
+  }
+  .dor-pendencia::before {
+    content: '⊙';
+    font-size: 14px;
   }
 
-  /* ====== TRANSITION ====== */
+  /* TRANSITION */
   .transition-section {
-    justify-content: center;
     text-align: center;
+    padding: 180px 32px;
+    background: var(--bg-soft);
   }
-  .transition-section .from {
+  .transition-content { max-width: 800px; margin: 0 auto; }
+  .transition-content h2 { margin-bottom: 24px; }
+  .transition-content h2 .from {
     color: var(--text-dim);
     text-decoration: line-through;
-    text-decoration-color: var(--warn);
+    text-decoration-color: rgba(232, 74, 107, 0.5);
     text-decoration-thickness: 3px;
   }
-  .transition-section .to {
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  .transition-content h2 .to {
+    background: linear-gradient(135deg, var(--purple), var(--cyan));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
 
-  /* ====== PROCESSO VS SISTEMA ====== */
+  /* PROCESSO VS SISTEMA */
   .pvs-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 2px;
-    margin-top: 64px;
-    border-radius: var(--radius);
-    overflow: hidden;
-    background: var(--border);
+    gap: 24px;
+    margin-top: 56px;
   }
   @media (max-width: 900px) { .pvs-grid { grid-template-columns: 1fr; } }
 
   .pvs-card {
-    padding: 48px;
+    padding: 40px;
+    border-radius: 24px;
+    border: 1px solid var(--border);
     background: var(--bg-card);
     position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
   }
-  .pvs-card:hover { background: var(--bg-card-hover); }
+  .pvs-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+  .pvs-card.process {
+    background: linear-gradient(135deg, var(--purple-tint), var(--bg-card));
+    border-color: rgba(91, 69, 245, 0.2);
+  }
+  .pvs-card.system {
+    background: linear-gradient(135deg, var(--cyan-tint), var(--bg-card));
+    border-color: rgba(0, 184, 184, 0.2);
+  }
   .pvs-icon {
     width: 56px; height: 56px;
-    border-radius: 14px;
+    border-radius: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 28px;
-    font-family: 'Instrument Serif', serif;
-    font-size: 26px;
+    margin-bottom: 24px;
+    font-weight: 800;
+    font-size: 24px;
+    letter-spacing: -0.02em;
   }
-  .pvs-card.process .pvs-icon { background: rgba(99, 102, 241, 0.12); color: var(--accent-2); border: 1px solid rgba(99, 102, 241, 0.2); }
-  .pvs-card.system .pvs-icon { background: var(--accent-glow); color: var(--accent); border: 1px solid rgba(0, 210, 190, 0.2); }
+  .pvs-card.process .pvs-icon { background: var(--purple); color: #fff; }
+  .pvs-card.system .pvs-icon { background: var(--cyan); color: #fff; }
 
-  .pvs-card h3 { margin-bottom: 8px; font-size: 28px; }
+  .pvs-card h3 { margin-bottom: 6px; }
   .pvs-card .pvs-sub {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.1em;
     color: var(--text-dim);
-    margin-bottom: 32px;
+    margin-bottom: 28px;
+    font-weight: 600;
   }
   .pvs-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
   }
   .pvs-list li {
     padding-left: 28px;
     position: relative;
-    font-size: 14.5px;
-    color: var(--text-mid);
-    line-height: 1.55;
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.5;
+    font-weight: 500;
   }
   .pvs-list li::before {
     content: '';
     position: absolute;
     left: 0; top: 7px;
-    width: 14px; height: 14px;
-    border-radius: 4px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
     border: 2px solid;
   }
-  .pvs-card.process .pvs-list li::before { border-color: rgba(99, 102, 241, 0.4); }
-  .pvs-card.system .pvs-list li::before { border-color: rgba(0, 210, 190, 0.4); }
+  .pvs-card.process .pvs-list li::before { border-color: var(--purple); }
+  .pvs-card.system .pvs-list li::before { border-color: var(--cyan); }
 
-  /* ====== LEITURA CRUZADA ====== */
+  /* LEITURA CRUZADA */
   .leitura-card {
     background: var(--bg-card);
-    border: 1px solid var(--accent);
-    border-radius: var(--radius);
-    padding: 64px;
+    border: 2px solid var(--purple);
+    border-radius: 32px;
+    padding: 56px;
     margin-top: 48px;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 0 0 1px var(--accent), 0 40px 80px -20px rgba(0, 210, 190, 0.12);
+    box-shadow: var(--shadow-lg);
   }
   .leitura-card::before {
     content: '';
     position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 200px;
-    background: radial-gradient(ellipse at 50% 0%, var(--accent-glow), transparent 70%);
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(ellipse at 80% 0%, var(--purple-tint), transparent 50%);
     pointer-events: none;
   }
   .leitura-card .ribbon {
     display: inline-flex;
-    padding: 8px 18px;
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, var(--purple), var(--cyan));
     color: #fff;
-    border-radius: 6px;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    font-weight: 500;
-    margin-bottom: 28px;
+    font-weight: 700;
+    margin-bottom: 24px;
     position: relative;
     z-index: 1;
   }
   .leitura-card h3 {
-    font-size: clamp(26px, 3.2vw, 38px);
-    margin-bottom: 28px;
+    font-size: clamp(28px, 3.5vw, 40px);
+    margin-bottom: 24px;
     position: relative;
     z-index: 1;
   }
   .leitura-card .body {
-    font-size: 16px;
+    font-size: 17px;
     color: var(--text-mid);
-    line-height: 1.7;
-    max-width: 700px;
+    line-height: 1.65;
+    max-width: 720px;
     position: relative;
     z-index: 1;
   }
   .leitura-card .body p { margin-bottom: 16px; }
-  .leitura-card .body strong { color: var(--text); font-weight: 600; }
+  .leitura-card .body strong { color: var(--text); font-weight: 700; }
   .leitura-card .body em {
-    font-style: italic;
-    font-family: 'Instrument Serif', serif;
-    font-size: 1.1em;
-    color: var(--accent);
+    font-style: normal;
+    background: linear-gradient(120deg, var(--purple), var(--cyan));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 700;
   }
 
   .leitura-divisao {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: 20px;
     margin-top: 32px;
     position: relative;
     z-index: 1;
   }
-  @media (max-width: 768px) { .leitura-divisao { grid-template-columns: 1fr; } }
+  @media (max-width: 720px) { .leitura-divisao { grid-template-columns: 1fr; } }
   .leitura-divisao > div {
-    padding: 28px;
+    padding: 24px;
     background: var(--bg-soft);
-    border-radius: var(--radius-sm);
+    border-radius: 16px;
     border: 1px solid var(--border);
   }
   .leitura-divisao h5 {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
-    margin-bottom: 14px;
-    font-weight: 500;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+    font-weight: 700;
   }
-  .leitura-divisao .ferramenta h5 { color: var(--accent); }
-  .leitura-divisao .governanca h5 { color: var(--accent-2); }
-  .leitura-divisao p { font-size: 14px; color: var(--text-mid); line-height: 1.55; }
+  .leitura-divisao .ferramenta h5 { color: var(--cyan); }
+  .leitura-divisao .governanca h5 { color: var(--purple); }
+  .leitura-divisao p { font-size: 14.5px; color: var(--text); line-height: 1.5; }
 
-  /* ====== COMPARE TABLE ====== */
+  /* COMPARE TABLE */
   .compare {
     margin-top: 56px;
     border: 1px solid var(--border);
-    border-radius: var(--radius);
+    border-radius: 20px;
     overflow: hidden;
     background: var(--bg-card);
   }
   .compare-row {
     display: grid;
-    grid-template-columns: 1.1fr 2fr 0.4fr 2fr;
+    grid-template-columns: 1.2fr 2fr 0.5fr 2fr;
     align-items: center;
     border-bottom: 1px solid var(--border);
     transition: background 0.3s;
   }
   .compare-row:last-child { border-bottom: none; }
-  .compare-row:hover:not(.head) { background: var(--bg-card-hover); }
+  .compare-row:hover { background: var(--bg-soft); }
   .compare-row.head {
-    background: var(--bg-elevated);
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
+    background: var(--bg-tint);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.12em;
     color: var(--text-dim);
-    font-weight: 500;
+    font-weight: 700;
   }
+  .compare-row.head:hover { background: var(--bg-tint); }
+
   .compare-cell {
-    padding: 20px 28px;
-    font-size: 14px;
-    line-height: 1.45;
+    padding: 22px 26px;
+    font-size: 14.5px;
+    line-height: 1.4;
   }
   .compare-cell.area {
     font-weight: 700;
     color: var(--text);
-    font-size: 14px;
-    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
   }
-  .compare-cell.asis { color: var(--text-dim); }
-  .compare-cell.tobe { color: var(--text-mid); font-weight: 500; }
-  .compare-cell.arrow { text-align: center; color: var(--accent); font-size: 16px; }
+  .compare-cell.asis { color: var(--text-mid); }
+  .compare-cell.tobe { color: var(--text); font-weight: 600; }
+  .compare-cell.arrow {
+    text-align: center;
+    color: var(--cyan);
+    font-size: 20px;
+    font-weight: 800;
+  }
+  .compare-row.head .compare-cell { font-size: 11px; }
 
-  @media (max-width: 768px) {
+  @media (max-width: 720px) {
     .compare-row { grid-template-columns: 1fr; }
-    .compare-cell { padding: 10px 24px; }
-    .compare-cell.area { padding-top: 20px; }
+    .compare-cell { padding: 12px 22px; }
+    .compare-cell.area { padding-top: 22px; padding-bottom: 4px; }
     .compare-cell.arrow { display: none; }
-    .compare-cell.asis::before { content: 'Hoje: '; color: var(--warn); font-family: 'DM Mono', monospace; font-size: 10px; }
-    .compare-cell.tobe::before { content: 'Proposta: '; color: var(--accent); font-family: 'DM Mono', monospace; font-size: 10px; }
-    .compare-cell.tobe { padding-bottom: 20px; }
+    .compare-cell.asis::before { content: 'AS IS · '; color: var(--warn); font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; font-weight: 700;}
+    .compare-cell.tobe::before { content: 'TO BE · '; color: var(--cyan); font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; font-weight: 700;}
+    .compare-cell.tobe { padding-bottom: 22px; }
     .compare-row.head { display: none; }
   }
 
-  /* ====== GANHOS ====== */
-  .ganhos-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    margin-top: 56px;
+  /* GANHOS */
+  .ganhos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 48px;
   }
-  @media (max-width: 768px) { .ganhos-grid { grid-template-columns: 1fr; } }
-
   .ganho-item {
-    padding: 32px;
+    display: flex;
+    align-items: flex-start;
+    gap: 22px;
+    padding: 24px 28px;
     background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    transition: all 0.4s;
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
+    border-radius: 18px;
+    transition: all 0.4s ease;
   }
   .ganho-item:hover {
-    border-color: var(--accent);
-    transform: translateY(-3px);
-    box-shadow: 0 16px 48px -12px rgba(0, 210, 190, 0.15);
+    border-color: var(--cyan);
+    transform: translateX(8px);
+    box-shadow: var(--shadow-md);
   }
   .ganho-check {
     flex-shrink: 0;
-    width: 36px; height: 36px;
-    border-radius: 10px;
-    background: var(--accent-glow);
-    border: 1px solid rgba(0, 210, 190, 0.2);
+    width: 40px; height: 40px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--purple), var(--cyan));
     display: flex;
     align-items: center;
     justify-content: center;
   }
   .ganho-check svg {
-    width: 16px; height: 16px;
+    width: 20px; height: 20px;
     fill: none;
-    stroke: var(--accent);
+    stroke: #fff;
     stroke-width: 3;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
-  .ganho-text h4 {
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    margin-bottom: 6px;
-  }
-  .ganho-text p { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
+  .ganho-text h4 { font-size: 18px; margin-bottom: 4px; }
+  .ganho-text p { font-size: 14.5px; color: var(--text-mid); line-height: 1.5; }
 
-  /* ====== FOOTER ====== */
+  /* FOOTER */
   footer {
-    min-height: auto;
-    scroll-snap-align: start;
-    padding: 120px 60px 60px;
-    text-align: center;
     border-top: 1px solid var(--border);
+    padding: 100px 32px 60px;
     background: var(--bg-soft);
+    text-align: center;
+    position: relative;
+    z-index: 2;
   }
-  footer h2 { margin-bottom: 20px; }
-  footer .lead { margin: 0 auto 48px; text-align: center; }
+  footer h2 { margin-bottom: 16px; }
+  footer .accent {
+    background: linear-gradient(135deg, var(--purple), var(--cyan));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  footer p {
+    color: var(--text-mid);
+    margin-bottom: 40px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   .contacts {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 72px;
+    gap: 12px;
+    margin-bottom: 60px;
   }
   .contact-tag {
     padding: 12px 22px;
     background: var(--bg-card);
-    border: 1px solid var(--border-strong);
-    border-radius: 8px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
     font-size: 13px;
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     color: var(--text-mid);
     transition: all 0.3s;
-    letter-spacing: 0.02em;
+    cursor: default;
+    font-weight: 500;
   }
   .contact-tag:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+    border-color: var(--purple);
+    color: var(--purple);
     transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
   }
+
   .footer-meta {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
     color: var(--text-dim);
     text-transform: uppercase;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.15em;
   }
 
-  /* ====== Reveal animation ====== */
-  .reveal {
-    opacity: 0;
-    transform: translateY(32px);
-    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  .reveal.in { opacity: 1; transform: translateY(0); }
-  .reveal.d1 { transition-delay: 0.1s; }
-  .reveal.d2 { transition-delay: 0.2s; }
-  .reveal.d3 { transition-delay: 0.3s; }
-  .reveal.d4 { transition-delay: 0.4s; }
-
-  /* Slide navigator */
-  .slide-nav {
+  /* ===== Section navigator ===== */
+  .secnav {
     position: fixed;
-    bottom: 32px;
-    right: 32px;
-    z-index: 100;
+    bottom: 28px;
+    right: 28px;
+    z-index: 60;
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px;
-    background: rgba(10, 10, 15, 0.9);
+    gap: 12px;
+    padding: 10px 12px 10px 18px;
+    background: rgba(253, 253, 251, 0.92);
     backdrop-filter: blur(20px);
-    border: 1px solid var(--border-strong);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
     border-radius: 999px;
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-lg);
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
     opacity: 0;
-    transform: translateY(16px);
-    transition: all 0.4s;
+    transform: translateY(20px);
   }
-  .slide-nav.visible { opacity: 1; transform: translateY(0); }
+  .secnav.visible { opacity: 1; transform: translateY(0); }
 
-  .slide-nav-btn {
-    width: 40px; height: 40px;
-    border-radius: 50%;
-    border: 1px solid var(--border-strong);
-    background: var(--bg-card);
+  .secnav-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
     color: var(--text-mid);
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    min-width: 38px;
+    text-align: center;
+  }
+  .secnav-counter strong { color: var(--purple); font-weight: 700; }
+
+  .secnav-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.25s;
+    transition: all 0.25s ease;
     padding: 0;
   }
-  .slide-nav-btn:hover:not(:disabled) {
-    background: var(--accent);
-    border-color: var(--accent);
+  .secnav-btn:hover:not(:disabled) {
+    background: var(--purple);
+    border-color: var(--purple);
     color: #fff;
     transform: scale(1.08);
   }
-  .slide-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-  .slide-nav-btn svg {
-    width: 16px; height: 16px;
+  .secnav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  .secnav-btn svg {
+    width: 16px;
+    height: 16px;
     fill: none;
     stroke: currentColor;
     stroke-width: 2.5;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
-  .slide-nav-counter {
-    font-family: 'DM Mono', monospace;
+  .secnav-btn.primary {
+    background: linear-gradient(135deg, var(--purple), var(--cyan));
+    border-color: transparent;
+    color: #fff;
+    width: 44px;
+    height: 44px;
+  }
+  .secnav-btn.primary:hover:not(:disabled) {
+    transform: scale(1.08);
+    box-shadow: 0 8px 24px rgba(91, 69, 245, 0.35);
+  }
+  .secnav-btn.primary svg { width: 20px; height: 20px; }
+
+  .secnav-hint {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    right: 0;
+    background: var(--text);
+    color: var(--bg);
+    padding: 6px 12px;
+    border-radius: 8px;
     font-size: 11px;
-    color: var(--text-mid);
-    padding: 0 10px;
-    min-width: 44px;
-    text-align: center;
-  }
-  .slide-nav-counter strong { color: var(--accent); }
-
-  @media (max-width: 768px) {
-    .slide-nav { bottom: 16px; right: 16px; }
-  }
-
-  /* Section side label */
-  .section-label {
-    position: absolute;
-    left: 32px;
-    bottom: 32px;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    transform: rotate(180deg);
-  }
-  @media (max-width: 768px) { .section-label { display: none; } }
-
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--bg-elevated); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
-
-  /* Long sections need overflow */
-  section.overflow {
-    min-height: auto;
-    scroll-snap-align: start;
-    padding-top: 140px;
-    padding-bottom: 120px;
-    align-items: flex-start;
-  }
-
-  /* ====== TRUCK PROGRESS ====== */
-  .truck-track {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 80px;
-    z-index: 150;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.25s, transform 0.25s;
     pointer-events: none;
-    overflow: hidden;
   }
-  .truck-road {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 20px;
-    background: linear-gradient(180deg, rgba(10,10,15,0) 0%, rgba(10,10,15,0.9) 40%, #0d0d14 100%);
-  }
-  .truck-road::before {
+  .secnav-hint::after {
     content: '';
     position: absolute;
-    top: 10px;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: repeating-linear-gradient(90deg, rgba(255,255,255,0.1) 0px, rgba(255,255,255,0.1) 20px, transparent 20px, transparent 40px);
+    top: 100%;
+    right: 16px;
+    border: 5px solid transparent;
+    border-top-color: var(--text);
+  }
+  .secnav:hover .secnav-hint {
+    opacity: 1;
+    transform: translateY(0);
   }
 
-  .truck-container {
-    position: absolute;
-    bottom: 4px;
-    left: -15%;
-    transition: left 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-    filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.5));
-  }
-
-  .truck-img {
-    width: 180px;
-    height: auto;
-    display: block;
-  }
-
-  .truck-exhaust {
-    position: absolute;
-    bottom: 24px;
-    left: -6px;
-    width: 20px;
-    height: 10px;
-    pointer-events: none;
-  }
-  .truck-exhaust span {
-    position: absolute;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.12);
-    animation: exhaust 1.4s ease-out infinite;
-  }
-  .truck-exhaust span:nth-child(2) {
-    animation-delay: 0.35s;
-    left: 4px;
-    bottom: 3px;
-  }
-  .truck-exhaust span:nth-child(3) {
-    animation-delay: 0.7s;
-    left: 8px;
-  }
-  .truck-container.stopped .truck-exhaust span {
-    animation-play-state: paused;
-    opacity: 0;
-  }
-  @keyframes exhaust {
-    0% { opacity: 0.3; transform: translate(0, 0) scale(1); }
-    100% { opacity: 0; transform: translate(-20px, -8px) scale(3); }
-  }
-
-  /* Destination flag */
-  .truck-destination {
-    position: fixed;
-    bottom: 36px;
-    right: 32px;
-    z-index: 149;
-    pointer-events: none;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    opacity: 0.4;
-  }
-  .truck-destination .flag {
-    font-size: 18px;
-    animation: wave-flag 2s ease-in-out infinite;
-  }
-  @keyframes wave-flag {
-    0%, 100% { transform: rotate(-5deg); }
-    50% { transform: rotate(5deg); }
-  }
-  .truck-destination .label {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-  }
-
-  @media (max-width: 768px) {
-    .truck-img { width: 120px; }
-    .truck-track { height: 60px; }
-    .truck-destination { display: none; }
+  @media (max-width: 720px) {
+    .secnav { bottom: 16px; right: 16px; padding: 8px 10px 8px 14px; }
+    .secnav-hint { display: none; }
   }
 </style>
 </head>
 <body>
 <div class="progress" id="progress"></div>
 
-<!-- Truck progress indicator -->
-<div class="truck-track" id="truckTrack">
-  <div class="truck-road"></div>
-  <div class="truck-container" id="truckContainer">
-    <div class="truck-exhaust"><span></span><span></span><span></span></div>
-    <img class="truck-img" src="truck.png" alt="Caminhao Schulz">
-  </div>
-</div>
-<div class="truck-destination">
-  <span class="label">TO BE</span>
-  <span class="flag">&#9873;</span>
+<div class="secnav" id="secnav">
+  <span class="secnav-counter"><strong id="secnavCurrent">1</strong> / <span id="secnavTotal">10</span></span>
+  <button class="secnav-btn" id="secnavPrev" aria-label="Seção anterior" title="Seção anterior (↑)">
+    <svg viewBox="0 0 24 24"><polyline points="18,15 12,9 6,15"/></svg>
+  </button>
+  <button class="secnav-btn primary" id="secnavNext" aria-label="Próxima seção" title="Próxima seção (↓ ou Espaço)">
+    <svg viewBox="0 0 24 24"><polyline points="6,9 12,15 18,9"/></svg>
+  </button>
+  <span class="secnav-hint">↓ ou Espaço · Avançar</span>
 </div>
 
 <nav class="topnav">
   <div class="logo">
-    <span class="mark">C</span>
+    <span class="dot"></span>
     consolida
   </div>
-  <span class="meta">Schulz S.A. &middot; 30 Abr 2026</span>
-  <div class="slide-indicator"><strong id="navCurrent">01</strong> / <span id="navTotal">10</span></div>
+  <span class="meta">SCHULZ · 30 ABR 2026</span>
 </nav>
 
-<div class="slide-nav" id="slideNav">
-  <button class="slide-nav-btn" id="btnPrev" aria-label="Anterior">
-    <svg viewBox="0 0 24 24"><polyline points="18,15 12,9 6,15"/></svg>
-  </button>
-  <span class="slide-nav-counter"><strong id="counterCurrent">01</strong>/<span id="counterTotal">10</span></span>
-  <button class="slide-nav-btn" id="btnNext" aria-label="Proximo">
-    <svg viewBox="0 0 24 24"><polyline points="6,9 12,15 18,9"/></svg>
-  </button>
+<div class="navdots" id="navdots">
+  <a href="#hero" data-label="Capa" class="active"></a>
+  <a href="#contexto" data-label="Contexto"></a>
+  <a href="#escopo" data-label="Escopo"></a>
+  <a href="#asis" data-label="AS IS"></a>
+  <a href="#dores" data-label="7 Dores"></a>
+  <a href="#tobe" data-label="TO BE"></a>
+  <a href="#processo" data-label="Processo / Sistema"></a>
+  <a href="#leitura" data-label="O que conecta tudo"></a>
+  <a href="#mudancas" data-label="Mudanças"></a>
+  <a href="#ganhos" data-label="Ganhos"></a>
 </div>
 
 <main>
 
-  <!-- HERO -->
   <section class="hero" id="hero">
-    <div class="hero-bg"></div>
+    <div class="hero-deco"></div>
     <div class="hero-grid"></div>
-    <div class="hero-content">
-      <div class="hero-eyebrow reveal in">
-        <span class="dot"></span>
-        Diagnostico e Redesenho &middot; Logistica de Transporte
-      </div>
-      <h1 class="reveal in d1">Schulz S.A.<br><span class="accent-text italic">do AS IS ao TO BE.</span></h1>
-      <p class="lead reveal in d2">Mapeamento do processo de hoje, dores prioritarias e proposta de evolucao em tres frentes: processo, sistema e governanca da malha de transporte.</p>
-      <div class="hero-meta reveal in d3">
-        <div class="hero-meta-item">
-          <div class="label">Cliente</div>
-          <div class="value">Schulz S.A. &middot; Joinville/SC</div>
-        </div>
-        <div class="hero-meta-item">
-          <div class="label">Apresentacao</div>
-          <div class="value">30 de abril de 2026</div>
-        </div>
-        <div class="hero-meta-item">
-          <div class="label">Areas no escopo</div>
-          <div class="value">RVA, Vendas, Compras, Censos, TI</div>
-        </div>
+    <div class="container hero-content">
+      <div class="eyebrow reveal in">Diagnóstico e Redesenho · Logística de Transporte</div>
+      <h1 class="reveal in delay-1">Schulz S.A.<br><span class="accent">do AS IS ao TO BE.</span></h1>
+      <p class="lead reveal in delay-2">Mapeamento do processo de hoje, dores prioritárias e proposta de evolução em três frentes: processo, sistema e governança da malha de transporte.</p>
+      <div class="hero-meta reveal in delay-3">
+        <div><strong>Cliente</strong><span>Schulz S.A. · Joinville/SC</span></div>
+        <div><strong>Apresentação</strong><span>30 de abril de 2026</span></div>
+        <div><strong>Áreas no escopo</strong><span>RVA, Vendas, Compras, Censos, TI, Projetos Lincros</span></div>
       </div>
     </div>
-    <div class="scroll-cue">
-      Role para comecar
-      <div class="arrow"></div>
+    <div class="scrollhint">
+      Role para começar
+      <div class="line"></div>
     </div>
   </section>
 
-  <!-- CONTEXTO -->
   <section id="contexto">
-    <span class="section-label">01 &middot; Contexto</span>
     <div class="container">
-      <div class="mono reveal">01 &middot; Contexto da operacao</div>
-      <h2 class="reveal d1" style="margin-top:16px; max-width:700px;">A escala<br>do que esta em jogo.</h2>
-      <p class="lead reveal d2" style="margin-top:24px;">Antes de mapear processos, o tamanho do desafio. A Schulz opera duas frentes com perfis logisticos opostos, e a equipe de Vendas convive diariamente com a fragmentacao de informacao entre multiplos portais.</p>
+      <div class="section-header">
+        <div class="eyebrow reveal">01 · Contexto da operação</div>
+        <h2 class="reveal delay-1">A escala<br>do que está em jogo.</h2>
+        <p class="lead reveal delay-2" style="margin-top: 20px;">Antes de mapear processos, o tamanho do desafio. A Schulz opera duas frentes com perfis logísticos opostos, e a equipe de Vendas convive diariamente com a fragmentação de informação entre múltiplos portais.</p>
+      </div>
 
-      <div class="stats-grid reveal d3">
-        <div class="stat-cell">
-          <div class="stat-number"><span data-counter="58">0</span><span class="unit"> M</span></div>
+      <div class="stats">
+        <div class="stat reveal delay-1">
+          <div class="stat-num"><span data-counter="58">0</span><span class="unit"> M</span></div>
           <div class="stat-label">Conta frete anual (R$)</div>
           <div class="stat-sub">automotiva + compressores</div>
         </div>
-        <div class="stat-cell">
-          <div class="stat-number"><span data-counter="7">0</span></div>
+        <div class="stat reveal delay-2">
+          <div class="stat-num"><span data-counter="7">0</span></div>
           <div class="stat-label">Portais de transportadoras</div>
           <div class="stat-sub">consultados ~10x por dia</div>
         </div>
-        <div class="stat-cell">
-          <div class="stat-number"><span data-counter="30">0</span><span class="unit"> %</span></div>
+        <div class="stat reveal delay-3">
+          <div class="stat-num"><span data-counter="30">0</span><span class="unit"> %</span></div>
           <div class="stat-label">Entregas com agendamento</div>
           <div class="stat-sub">feito pela transportadora</div>
         </div>
       </div>
 
-      <div class="profiles reveal d4">
-        <div class="profile-tag">FOB &middot; Automotiva (cliente busca)</div>
-        <div class="profile-tag">CIF &middot; Compressores (30-40% Schulz)</div>
+      <div class="areas-row reveal delay-4">
+        <span class="label">Perfis distintos →</span>
+        <div class="area-tag">FOB · Automotiva (cliente busca)</div>
+        <div class="area-tag">CIF · Compressores (30-40% Schulz)</div>
       </div>
     </div>
   </section>
 
-  <!-- ESCOPO -->
-  <section id="escopo" class="overflow">
-    <span class="section-label">02 &middot; Escopo</span>
+  <section id="escopo" class="alt">
     <div class="container">
-      <div class="mono reveal">02 &middot; Escopo do redesenho</div>
-      <h2 class="reveal d1" style="margin-top:16px; max-width:700px;">Quem entra no redesenho<br>e em qual papel.</h2>
-      <p class="lead reveal d2" style="margin-top:24px;">Cada area entra com um papel especifico no processo redesenhado. A clareza desse recorte evita o erro comum de tratar todo mundo como dono.</p>
+      <div class="section-header">
+        <div class="eyebrow reveal">02 · Escopo do redesenho</div>
+        <h2 class="reveal delay-1">Quem entra no redesenho<br>e em qual papel.</h2>
+        <p class="lead reveal delay-2" style="margin-top: 20px;">A definição do escopo é parte do diagnóstico. Cada área entra com um papel específico no processo redesenhado, e a clareza desse recorte evita o erro comum de tratar todo mundo como dono.</p>
+      </div>
 
       <div class="escopo-grid">
         <div class="escopo-card reveal">
           <div class="escopo-badge dono">Dono</div>
           <div class="escopo-text">
-            <h4>RVA &middot; Pos-venda e garantias</h4>
-            <p>Entra integralmente. E a area com o gap mais severo de visibilidade sobre coletas reversas.</p>
+            <h4>RVA · Pós-venda e garantias</h4>
+            <p>Entra integralmente. É a área com o gap mais severo de visibilidade sobre coletas reversas.</p>
           </div>
         </div>
-        <div class="escopo-card reveal d1">
+        <div class="escopo-card reveal delay-1">
           <div class="escopo-badge dono">Dono</div>
           <div class="escopo-text">
             <h4>Vendas e Revenda</h4>
-            <p>Entra integralmente. Concentra o maior volume de dores estruturais: rastreamento, endereco de entrega, agendamento e deposito terceirizado.</p>
+            <p>Entra integralmente. Concentra o maior volume de dores estruturais: rastreamento, endereço de entrega, agendamento e depósito terceirizado.</p>
           </div>
         </div>
-        <div class="escopo-card reveal d2">
+        <div class="escopo-card reveal">
           <div class="escopo-badge gate">Filtra a base</div>
           <div class="escopo-text">
             <h4>Compras</h4>
-            <p>Nao e dono do processo. No novo desenho: incluir nas exigencias de homologacao a obrigacao da transportadora publicar status na ferramenta.</p>
+            <p>Não é dono do processo. Função no novo desenho: incluir nas exigências de homologação a obrigação da transportadora publicar status na ferramenta.</p>
           </div>
         </div>
-        <div class="escopo-card reveal d3">
+        <div class="escopo-card reveal delay-1">
           <div class="escopo-badge ator">Parceiro externo</div>
           <div class="escopo-text">
-            <h4>Operacao Censos</h4>
-            <p>Parceiro externo do processo de Vendas, com usuario proprio no Lincros. O deposito terceirizado opera dentro da torre, sem precisar ser do quadro Schulz.</p>
+            <h4>Operação Censos</h4>
+            <p>Entra como parceiro externo do processo de Vendas, com usuário próprio no Lincros. O depósito terceirizado opera dentro da torre, sem precisar ser do quadro Schulz.</p>
           </div>
         </div>
-        <div class="escopo-card reveal d4">
-          <div class="escopo-badge struct">Apoio tecnico</div>
+        <div class="escopo-card reveal">
+          <div class="escopo-badge struct">Apoio técnico</div>
           <div class="escopo-text">
             <h4>TI e Projetos Lincros</h4>
-            <p>Nao sao donos de processo de negocio. Apoiam com integracoes, parametrizacoes e habilitacao tecnica. Entram quando precisa, saem quando o processo esta rodando.</p>
+            <p>Não são donos de processo de negócio. Apoiam com integrações, parametrizações e habilitação técnica. Entram quando precisa, saem quando o processo está rodando.</p>
           </div>
         </div>
-        <div class="escopo-card full reveal">
+        <div class="escopo-card full reveal delay-1">
           <div class="escopo-badge fora">Fica de fora</div>
           <div class="escopo-text">
-            <h4>Manutencao</h4>
-            <p>Fica fora do redesenho. Transferencias entre unidades e envio para fornecedores sao coordenados diretamente, sem necessidade de torre de status.</p>
+            <h4>Manutenção</h4>
+            <p>Fica fora do redesenho. Transferências entre unidades e envio para fornecedores são coordenados diretamente, sem necessidade de torre de status. O único caso de visibilidade, frete expresso emergencial para peças, é exceção e pode ser absorvido pela mesma torre sem desenho específico.</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- AS IS -->
-  <section id="asis" class="overflow">
-    <span class="section-label">03 &middot; AS IS</span>
+  <section id="asis">
     <div class="container">
-      <div class="mono reveal">03 &middot; AS IS &middot; Visao geral</div>
-      <h2 class="reveal d1" style="margin-top:16px; max-width:700px;">O processo atual,<br>mapeado por area.</h2>
-      <p class="lead reveal d2" style="margin-top:24px;">Cada area foi entrevistada na unidade de Joinville. O que segue e o retrato fiel do processo, com os pontos de atrito de cada operacao.</p>
+      <div class="section-header">
+        <div class="eyebrow reveal">03 · AS IS · Visão geral</div>
+        <h2 class="reveal delay-1">O processo atual,<br>mapeado por área.</h2>
+        <p class="lead reveal delay-2" style="margin-top: 20px;">Cada área foi entrevistada na unidade de Joinville. O que segue é o retrato fiel do processo, com os pontos de atrito que apareceram em cada operação.</p>
+      </div>
 
-      <div class="asis-cards" style="margin-top:56px;">
+      <div class="asis-cards">
 
         <div class="asis-card reveal">
-          <span class="num">01</span>
-          <span class="tag">Logistica e Expedicao</span>
-          <h3>Dois perfis de operacao<br>na mesma planta.</h3>
+          <div class="area-num">01</div>
+          <div class="area-tag-small">Logística e Expedição</div>
+          <h3>Dois perfis de operação na mesma planta.</h3>
           <div class="asis-twocol">
             <div class="asis-col">
-              <h5>Automotiva</h5>
+              <h4>Automotiva</h4>
               <ul class="asis-list">
                 <li>Perfil majoritariamente FOB, cliente busca</li>
-                <li>Janelas pre-definidas por transportadora</li>
+                <li>Janelas pré-definidas por transportadora</li>
                 <li>Irapuru com 6 janelas/dia programadas</li>
                 <li>Sulista agendamento via e-mail</li>
                 <li>GAC cria agendamento no TOTVS</li>
                 <li>Pedidos chegam via EDI</li>
-                <li>Expedicao nao solicita frete</li>
+                <li>Expedição não solicita frete</li>
               </ul>
             </div>
             <div class="asis-col">
-              <h5>Compressores</h5>
+              <h4>Compressores</h4>
               <ul class="asis-list">
                 <li>Perfil CIF, 30-40% frete Schulz</li>
-                <li>Operacao mais complexa e pulverizada</li>
-                <li>Multiplas origens de demanda</li>
-                <li>Processo de cotacao mais ativo</li>
-                <li>Ja usa sistema para alcada de aprovacao</li>
-                <li>Romaneio nao e obrigatorio</li>
+                <li>Operação mais complexa e pulverizada</li>
+                <li>Múltiplas origens de demanda</li>
+                <li>Processo de cotação mais ativo</li>
+                <li>Já usa sistema para alçada de aprovação</li>
+                <li>Romaneio não é obrigatório</li>
               </ul>
             </div>
           </div>
-          <div class="alert-box">
-            <span class="icon">!</span>
-            Romaneio nao e obrigatorio para toda saida fisica. Sem ele, rastrear o que saiu e para onde fica dificil.
-          </div>
+          <div class="alert">Romaneio não é obrigatório para toda saída física. Sem ele, rastrear o que saiu e para onde fica difícil.</div>
         </div>
 
         <div class="asis-card reveal">
-          <span class="num">02</span>
-          <span class="tag">Compras e Fiscal</span>
-          <h3>Negociacao na mao,<br>fiscal manual.</h3>
+          <div class="area-num">02</div>
+          <div class="area-tag-small">Compras e Fiscal</div>
+          <h3>Negociação na mão, fiscal manual.</h3>
           <div class="asis-twocol">
             <div class="asis-col">
-              <h5>Compras</h5>
+              <h4>Compras</h4>
               <ul class="asis-list">
                 <li>Negociam tabelas de frete com transportadoras</li>
-                <li>Validam preco e prazo contratual</li>
+                <li>Validam preço e prazo contratual</li>
                 <li>Acompanham coletas em fornecedores</li>
-                <li>Cargas expressas via cotacao pontual</li>
+                <li>Cargas expressas via cotação pontual</li>
                 <li>Automotiva aprova spot por e-mail</li>
-                <li>Compressores usam alcada no sistema</li>
+                <li>Compressores usam alçada no sistema</li>
               </ul>
             </div>
             <div class="asis-col">
-              <h5>Fiscal e Recebimento</h5>
+              <h4>Fiscal e Recebimento</h4>
               <ul class="asis-list">
-                <li>Da entrada no CT-e no sistema</li>
-                <li>Prazo de 48h para lancar ou ate vencimento</li>
+                <li>Dá entrada no CT-e no sistema</li>
+                <li>Entrega via ao transportador</li>
+                <li>Prazo de 48h para lançar ou até vencimento</li>
                 <li>Integra XML para o TOTVS</li>
-                <li>Concilia natureza de operacao manualmente</li>
+                <li>Concilia natureza de operação manualmente</li>
               </ul>
             </div>
           </div>
-          <div class="alert-box">
-            <span class="icon">!</span>
-            Aprovacao spot por e-mail nao fica registrada em sistema. Modalidade trocada (FOB/CIF) trava integracao.
-          </div>
+          <div class="alert">Aprovação spot por e-mail não fica registrada em sistema. Modalidade trocada (FOB/CIF) trava integração.</div>
         </div>
 
         <div class="asis-card reveal">
-          <span class="num">03</span>
-          <span class="tag">Controladoria e Financeiro</span>
-          <h3>A auditoria existe,<br>mas o ferramental nao.</h3>
+          <div class="area-num">03</div>
+          <div class="area-tag-small">Controladoria e Financeiro</div>
+          <h3>A auditoria existe, mas o ferramental não.</h3>
           <div class="asis-twocol">
             <div class="asis-col">
-              <h5>Controladoria &middot; auditoria</h5>
+              <h4>Controladoria · auditoria</h4>
               <ul class="asis-list">
-                <li>Valida peso do veiculo vs nota fiscal</li>
-                <li>Confere se as evidencias estao completas</li>
+                <li>Valida peso do veículo vs nota fiscal</li>
+                <li>Confere se as evidências estão completas</li>
                 <li>Taxas extras validadas por e-mail</li>
-                <li>Pre-fatura funciona para fracionado</li>
-                <li>Pre-fatura NAO funciona para lotacao</li>
+                <li>Pré-fatura funciona para fracionado</li>
+                <li>Pré-fatura NÃO funciona para lotação</li>
                 <li>Faturas chegam semanalmente</li>
               </ul>
             </div>
             <div class="asis-col">
-              <h5>Financeiro</h5>
+              <h4>Financeiro</h4>
               <ul class="asis-list">
                 <li>Recebe documentos para pagamento</li>
-                <li>Prazo atual de 3 dias uteis antes do vencimento</li>
+                <li>Prazo atual de 3 dias úteis antes do vencimento</li>
                 <li>Documentos chegam no limite</li>
-                <li>Sem tempo para validar inconsistencias</li>
-                <li>Depende da liberacao da Controladoria</li>
+                <li>Sem tempo para validar inconsistências</li>
+                <li>Depende da liberação da Controladoria</li>
               </ul>
             </div>
           </div>
-          <div class="alert-box">
-            <span class="icon">!</span>
-            Taxas extras sem registro sistemico. Documentos chegando em cima da hora reduzem a janela de auditoria.
-          </div>
+          <div class="alert">Taxas extras sem registro sistêmico. Documentos chegando em cima da hora reduzem a janela de auditoria.</div>
         </div>
 
       </div>
     </div>
   </section>
 
-  <!-- 7 DORES -->
-  <section id="dores" class="overflow">
-    <span class="section-label">04 &middot; 7 Dores</span>
+  <section id="dores" class="alt">
     <div class="container">
-      <div class="mono reveal" style="color: var(--warn);">04 &middot; As 7 dores prioritarias</div>
-      <h2 class="reveal d1" style="margin-top:16px; max-width:700px;">Onde o processo<br>perde controle hoje.</h2>
-      <p class="lead reveal d2" style="margin-top:24px;">Sete dores especificas, levantadas com Vendas, RVA e Compras. Cada uma tem AS IS e TO BE definidos, e a setima e a que sustenta todas as outras ao longo do tempo.</p>
+      <div class="section-header">
+        <div class="eyebrow warn reveal">04 · As 7 dores prioritárias</div>
+        <h2 class="reveal delay-1">Onde o processo<br>perde controle hoje.</h2>
+        <p class="lead reveal delay-2" style="margin-top: 20px;">Sete dores específicas, levantadas com Vendas, RVA e Compras. Cada uma tem AS IS e TO BE definidos, e a sétima é a que sustenta todas as outras ao longo do tempo.</p>
+      </div>
 
       <div class="dores-list">
 
@@ -1491,7 +1404,7 @@
           <div class="dor-head">
             <div class="dor-num">1</div>
             <div class="dor-title">
-              <div class="scope">RVA &middot; Vendas</div>
+              <div class="scope">RVA · Vendas</div>
               <h3>Rastreamento de cargas</h3>
             </div>
             <div class="dor-flag">Visibilidade</div>
@@ -1499,12 +1412,12 @@
           <div class="dor-body">
             <div class="dor-col asis">
               <h5>AS IS</h5>
-              <p>A equipe de Vendas consulta sete portais de transportadoras diferentes cerca de dez vezes por dia para responder representantes e clientes. RVA acompanha coletas reversas por troca de e-mail, sem status fidedigno.</p>
+              <p>A equipe de Vendas consulta sete portais de transportadoras diferentes cerca de dez vezes por dia para responder representantes e clientes. RVA acompanha coletas reversas por troca de e-mail, sem status fidedigno de etapa nem localização. Cliente final pressiona a área interna porque não recebe visibilidade direta.</p>
             </div>
-            <div class="dor-arrow">&rarr;</div>
+            <div class="dor-arrow">→</div>
             <div class="dor-col tobe">
               <h5>TO BE</h5>
-              <p>Torre unica no Lincros consolidando o status de todas as transportadoras em uma so interface. Notificacao automatica enviada ao cliente final. A area interna deixa de ser ponto de consulta e passa a ser ponto de excecao.</p>
+              <p>Torre única no Lincros consolidando o status de todas as transportadoras em uma só interface. Notificação automática enviada ao cliente final pelo próprio Lincros. A área interna deixa de ser ponto de consulta e passa a ser ponto de exceção.</p>
             </div>
           </div>
         </div>
@@ -1513,23 +1426,23 @@
           <div class="dor-head">
             <div class="dor-num">2</div>
             <div class="dor-title">
-              <div class="scope">RVA &middot; Vendas</div>
-              <h3>Endereco de entrega divergente do fiscal</h3>
+              <div class="scope">RVA · Vendas</div>
+              <h3>Endereço de entrega divergente do fiscal</h3>
             </div>
             <div class="dor-flag">Cadastro</div>
           </div>
           <div class="dor-body">
             <div class="dor-col asis">
               <h5>AS IS</h5>
-              <p>Cliente fatura na matriz e recebe em CDA ou deposito. A equipe altera manualmente a nota ou comunica o endereco por e-mail a transportadora, com risco de erro.</p>
+              <p>Cliente fatura na matriz e recebe em CDA ou depósito. A equipe altera manualmente a nota ou comunica o endereço de entrega por e-mail à transportadora, com risco de erro e sem rastreabilidade.</p>
             </div>
-            <div class="dor-arrow">&rarr;</div>
+            <div class="dor-arrow">→</div>
             <div class="dor-col tobe">
               <h5>TO BE</h5>
-              <p>Campo dedicado no Lincros para endereco de entrega independente do destinatario fiscal, alimentado pela integracao.</p>
+              <p>Campo dedicado no Lincros para endereço de entrega independente do destinatário fiscal, alimentado pela integração.</p>
             </div>
           </div>
-          <div class="dor-pendencia">Pendente: Ana validar como o campo e populado a partir do TOTVS.</div>
+          <div class="dor-pendencia">Pendente: Ana validar como o campo é populado a partir do TOTVS.</div>
         </div>
 
         <div class="dor reveal">
@@ -1544,12 +1457,12 @@
           <div class="dor-body">
             <div class="dor-col asis">
               <h5>AS IS</h5>
-              <p>20 a 30% das entregas tem agendamento feito pela transportadora, sem participacao do embarcador. A equipe perde controle do prazo prometido.</p>
+              <p>20 a 30% das entregas têm agendamento feito pela transportadora, sem participação do embarcador. A equipe perde controle do prazo prometido e não consegue separar atraso real de atraso justificado.</p>
             </div>
-            <div class="dor-arrow">&rarr;</div>
+            <div class="dor-arrow">→</div>
             <div class="dor-col tobe">
               <h5>TO BE</h5>
-              <p>Equipe interna cria a instrucao de agendamento, valida a data com o cliente e envia para a transportadora pelo Lincros. A ferramenta mantem historico das previsoes, gerando base para analise de SLA.</p>
+              <p>Equipe interna cria a instrução de agendamento, valida a data com o cliente e envia para a transportadora pelo Lincros. A ferramenta sobrescreve a previsão original com a data reagendada e mantém o histórico das duas, gerando base para análise de SLA e contestação documentada.</p>
             </div>
           </div>
         </div>
@@ -1559,19 +1472,19 @@
             <div class="dor-num">4</div>
             <div class="dor-title">
               <div class="scope">Vendas</div>
-              <h3>Operacao do deposito Censos</h3>
+              <h3>Operação do depósito Censos</h3>
             </div>
             <div class="dor-flag">Terceirizado</div>
           </div>
           <div class="dor-body">
             <div class="dor-col asis">
               <h5>AS IS</h5>
-              <p>Elane se desloca a unidade para buscar romaneios fisicos e dar baixa manual no sistema. Para solicitar agendamento de cargas dedicadas, ela usa um caminho a parte, fora do sistema.</p>
+              <p>Elane se desloca à unidade para buscar romaneios físicos e dar baixa manual no sistema. Para solicitar agendamento de cargas dedicadas, ela usa um caminho à parte, fora do sistema. Ninguém na Schulz vê em tempo real o que sai do depósito.</p>
             </div>
-            <div class="dor-arrow">&rarr;</div>
+            <div class="dor-arrow">→</div>
             <div class="dor-col tobe">
               <h5>TO BE</h5>
-              <p>Usuario externo no Lincros para o operador do Censos, com perfil para baixa em tempo real e solicitacao de agendamento de cargas dedicadas.</p>
+              <p>Usuário externo no Lincros para o operador do Censos, com perfil para baixa em tempo real e solicitação de agendamento de cargas dedicadas. Elane sai do papel operacional de busca de romaneios e assume papel de validação por exceção.</p>
             </div>
           </div>
           <div class="dor-pendencia">Pendente: Projetos Lincros e TI.</div>
@@ -1582,19 +1495,19 @@
             <div class="dor-num">5</div>
             <div class="dor-title">
               <div class="scope">Vendas</div>
-              <h3>Regras especificas por destinatario</h3>
+              <h3>Regras específicas por destinatário</h3>
             </div>
             <div class="dor-flag">Regras do cliente</div>
           </div>
           <div class="dor-body">
             <div class="dor-col asis">
               <h5>AS IS</h5>
-              <p>Clientes do Nordeste exigem agendamento por periodo, ordem de chegada, ajudante, veiculo especifico. Comunicacao vai solta, por e-mail ou telefone, com alta taxa de descumprimento.</p>
+              <p>Clientes do Nordeste e outros segmentos exigem agendamento por período, ordem de chegada, ajudante, veículo específico ou paletização particular. Hoje a comunicação à transportadora vai solta, por e-mail ou telefone, com alta taxa de descumprimento e retrabalho.</p>
             </div>
-            <div class="dor-arrow">&rarr;</div>
+            <div class="dor-arrow">→</div>
             <div class="dor-col tobe">
               <h5>TO BE</h5>
-              <p>Regras cadastradas no Lincros como Instrucoes vinculadas ao destinatario. O descumprimento passa a ter rastro documental, viabilizando responsabilizacao.</p>
+              <p>Regras cadastradas no Lincros como Instruções vinculadas ao destinatário. A cada embarque, o sistema dispara as regras automaticamente para a transportadora junto com a documentação. O descumprimento passa a ter rastro documental, viabilizando responsabilização.</p>
             </div>
           </div>
         </div>
@@ -1604,19 +1517,19 @@
             <div class="dor-num">6</div>
             <div class="dor-title">
               <div class="scope">Vendas</div>
-              <h3>Integracao TOTVS e baixa de embarque</h3>
+              <h3>Integração TOTVS e baixa de embarque</h3>
             </div>
-            <div class="dor-flag">Integracao</div>
+            <div class="dor-flag">Integração</div>
           </div>
           <div class="dor-body">
             <div class="dor-col asis">
               <h5>AS IS</h5>
-              <p>Romaneio e gerado no TOTVS, mas baixa e acompanhamento ficam dispersos. A operacao roda em dois sistemas que nao conversam.</p>
+              <p>Romaneio é gerado no TOTVS, mas baixa e acompanhamento ficam dispersos. A operação roda em dois sistemas que não conversam no fluxo do dia a dia.</p>
             </div>
-            <div class="dor-arrow">&rarr;</div>
+            <div class="dor-arrow">→</div>
             <div class="dor-col tobe">
               <h5>TO BE</h5>
-              <p>Lincros consome a integracao ja existente com o romaneio do TOTVS. Baixa feita dentro do Lincros, encerrando o ciclo do embarque na mesma ferramenta.</p>
+              <p>Lincros consome a integração já existente com o romaneio do TOTVS. Baixa feita dentro do Lincros, encerrando o ciclo do embarque na mesma ferramenta onde o status é monitorado.</p>
             </div>
           </div>
         </div>
@@ -1625,20 +1538,20 @@
           <div class="dor-head">
             <div class="dor-num">7</div>
             <div class="dor-title">
-              <div class="scope">Compras &middot; Cross</div>
-              <h3>Homologacao de transportadoras com obrigacao de publicar status</h3>
+              <div class="scope">Compras · Cross</div>
+              <h3>Homologação de transportadoras com obrigação de publicar status</h3>
             </div>
-            <div class="dor-flag">Governanca</div>
+            <div class="dor-flag">Governança</div>
           </div>
           <div class="dor-body">
             <div class="dor-col asis">
               <h5>AS IS</h5>
-              <p>O processo de homologacao nao exige contratualmente que a transportadora publique ocorrencias na ferramenta do embarcador. A consequencia e a torre incompleta, mesmo com Lincros implantado.</p>
+              <p>O processo de homologação de transportadoras conduzido pela Denise não exige contratualmente que a transportadora publique ocorrências e status na ferramenta do embarcador. A consequência é a torre incompleta, mesmo com Lincros implantado.</p>
             </div>
-            <div class="dor-arrow">&rarr;</div>
+            <div class="dor-arrow">→</div>
             <div class="dor-col tobe">
               <h5>TO BE</h5>
-              <p>A homologacao passa a exigir, em contrato, que a transportadora publique status e ocorrencias. Em um segundo momento, quem nao publicar nao recebe pagamento de frete.</p>
+              <p>A homologação passa a exigir, em contrato, que a transportadora publique status e ocorrências na plataforma do embarcador. Em um segundo momento, quem não publicar não recebe pagamento de frete. Esse ponto não é função da ferramenta, é regra de negócio sobre a base de transportadoras.</p>
             </div>
           </div>
         </div>
@@ -1647,237 +1560,235 @@
     </div>
   </section>
 
-  <!-- TRANSITION -->
-  <section class="transition-section" id="tobe">
-    <span class="section-label">05 &middot; TO BE</span>
-    <div class="container" style="text-align:center; max-width:900px;">
-      <div class="mono reveal">05 &middot; TO BE</div>
-      <h2 class="reveal d1" style="margin-top:24px;"><span class="from">Reagir a operacao.</span><br><span class="to">Controlar a operacao.</span></h2>
-      <p class="lead reveal d2" style="margin-top:28px; margin-left:auto; margin-right:auto; text-align:center;">A proposta separa o que depende de disciplina humana do que o sistema resolve sozinho. Essa distincao, em si, e metade do diagnostico.</p>
+  <section id="tobe" class="transition-section">
+    <div class="transition-content">
+      <div class="eyebrow reveal">05 · TO BE</div>
+      <h2 class="reveal delay-1"><span class="from">Reagir à operação.</span><br><span class="to">Controlar a operação.</span></h2>
+      <p class="lead reveal delay-2" style="margin-top: 24px; margin-left: auto; margin-right: auto;">A proposta separa o que depende de disciplina humana do que o sistema resolve sozinho. Essa distinção, em si, é metade do diagnóstico.</p>
     </div>
   </section>
 
-  <!-- PROCESSO VS SISTEMA -->
-  <section id="processo" class="overflow">
-    <span class="section-label">06 &middot; Processo / Sistema</span>
+  <section id="processo">
     <div class="container">
-      <div class="mono reveal">06 &middot; Processo vs Sistema</div>
-      <h2 class="reveal d1" style="margin-top:16px; max-width:700px;">A linha que divide<br>trabalho humano e automacao.</h2>
+      <div class="section-header">
+        <div class="eyebrow reveal">06 · Processo vs Sistema</div>
+        <h2 class="reveal delay-1">A linha que divide<br>trabalho humano e automação.</h2>
+      </div>
 
-      <div class="pvs-grid reveal d2">
-        <div class="pvs-card process">
+      <div class="pvs-grid">
+        <div class="pvs-card process reveal">
           <div class="pvs-icon">P</div>
           <h3>Processo</h3>
           <div class="pvs-sub">Disciplina operacional</div>
           <ul class="pvs-list">
-            <li>Romaneio obrigatorio para toda saida fisica.</li>
-            <li>Aprovacao de spot passa pelo sistema, com alcada definida.</li>
-            <li>Transportadora usa portal para aceite das pre-faturas.</li>
-            <li>Data de saida obrigatoria na NF antes da emissao.</li>
-            <li>Tratativa de divergencia em ate 48h, com SLA contratual.</li>
-            <li>Liberacao financeira com 5 dias de antecedencia.</li>
+            <li>Romaneio obrigatório para toda saída física.</li>
+            <li>Aprovação de spot passa pelo sistema, com alçada definida.</li>
+            <li>Transportadora usa portal para aceite das pré-faturas.</li>
+            <li>Data de saída obrigatória na NF antes da emissão.</li>
+            <li>Tratativa de divergência em até 48h, com SLA contratual.</li>
+            <li>Liberação financeira com 5 dias de antecedência.</li>
           </ul>
         </div>
-        <div class="pvs-card system">
+        <div class="pvs-card system reveal delay-1">
           <div class="pvs-icon">S</div>
           <h3>Sistema</h3>
-          <div class="pvs-sub">Automacao e controle</div>
+          <div class="pvs-sub">Automação e controle</div>
           <ul class="pvs-list">
-            <li>Calculo automatico do frete via tabela cadastrada.</li>
-            <li>Auditoria CT-e contra tabela, com tolerancia configuravel.</li>
-            <li>Pre-fatura semanal automatizada, fracionado e lotacao.</li>
-            <li>Painel de divergencias com status, responsavel e prazo.</li>
-            <li>Integracao CT-e para ERP automatizada.</li>
+            <li>Cálculo automático do frete via tabela cadastrada.</li>
+            <li>Auditoria CT-e contra tabela, com tolerância configurável.</li>
+            <li>Pré-fatura semanal automatizada, fracionado e lotação.</li>
+            <li>Painel de divergências com status, responsável e prazo.</li>
+            <li>Integração CT-e para ERP automatizada.</li>
             <li>Dashboards e KPIs em tempo real.</li>
           </ul>
         </div>
       </div>
+
+      <p class="lead reveal delay-2" style="margin-top: 56px; text-align: center; max-width: 720px; margin-left: auto; margin-right: auto; font-size: 16px;">A Controladoria continua dona da auditoria. O que muda é o ferramental, que deixa de ser planilha e e-mail e passa a ser sistema com rastreabilidade nativa.</p>
     </div>
   </section>
 
-  <!-- LEITURA CRUZADA -->
-  <section id="leitura" class="overflow">
-    <span class="section-label">07 &middot; O que conecta tudo</span>
+  <section id="leitura" class="alt">
     <div class="container">
-      <div class="mono reveal">07 &middot; O que conecta tudo</div>
-      <h2 class="reveal d1" style="margin-top:16px; max-width:700px;">A peca que sustenta<br>tudo ao longo do tempo.</h2>
+      <div class="section-header">
+        <div class="eyebrow reveal">07 · O que conecta tudo</div>
+        <h2 class="reveal delay-1">A peça que sustenta<br>tudo ao longo do tempo.</h2>
+        <p class="lead reveal delay-2" style="margin-top: 20px;">Olhando as sete dores juntas, fica clara uma divisão que muda o papel da Consolida no projeto.</p>
+      </div>
 
-      <div class="leitura-card reveal d2">
-        <span class="ribbon">A peca-chave do redesenho</span>
-        <h3>Dos sete pontos, seis sao parametrizacao.<br>Um e <em>governanca da malha de transporte</em>.</h3>
+      <div class="leitura-card reveal delay-3">
+        <span class="ribbon">A peça-chave do redesenho</span>
+        <h3>Dos sete pontos, seis são parametrização.<br>Um é <em>governança da malha de transporte</em>.</h3>
 
         <div class="leitura-divisao">
           <div class="ferramenta">
-            <h5>1 a 6 &middot; Configurar e treinar</h5>
-            <p>Resolvidos dentro da ferramenta. E o trabalho da Ana e do time Lincros: configurar, integrar, dar acesso e treinar as areas.</p>
+            <h5>1 a 6 · Configurar e treinar</h5>
+            <p>Resolvidos dentro da ferramenta. É o trabalho da Ana e do time Lincros, configurar, integrar, dar acesso e treinar as áreas.</p>
           </div>
           <div class="governanca">
-            <h5>7 &middot; Regra de contrato</h5>
-            <p>Nao e funcao da ferramenta, e regra do contrato com a transportadora. Sem ele, a torre vai existir tecnicamente, mas vai ficar furada.</p>
+            <h5>7 · Regra de contrato</h5>
+            <p>Não é função da ferramenta, é regra do contrato com a transportadora. Sem ele, a torre vai existir tecnicamente, mas vai ficar furada.</p>
           </div>
         </div>
 
-        <div class="body" style="margin-top:32px;">
-          <p><strong>O item 7 e o que sustenta os outros seis ao longo do tempo.</strong> Sem a obrigacao no contrato de publicar ocorrencias e status no sistema do embarcador, parte das transportadoras simplesmente nao vai alimentar a torre.</p>
-          <p>Por isso, o redesenho deixa de ser <strong>implementacao de software</strong> e vira <em>governanca da malha de transporte</em>. Essa e a peca que a Consolida puxa para si &mdash; e o que separa um projeto que entrega ferramenta de um projeto que entrega controle.</p>
+        <div class="body" style="margin-top: 32px;">
+          <p><strong>O item 7 é o que sustenta os outros seis ao longo do tempo.</strong> Sem a obrigação no contrato de publicar ocorrências e status no sistema do embarcador, parte das transportadoras simplesmente não vai alimentar a torre. A ferramenta fica funcionando, mas vazia.</p>
+          <p>Por isso, o redesenho deixa de ser <strong>implementação de software</strong> e vira <em>governança da malha de transporte</em>. Essa é a peça que a Consolida puxa para si, é o que separa um projeto que entrega ferramenta de um projeto que entrega controle.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- MUDANCAS -->
-  <section id="mudancas" class="overflow">
-    <span class="section-label">08 &middot; Mudancas</span>
+  <section id="mudancas">
     <div class="container">
-      <div class="mono reveal">08 &middot; Mudancas por area</div>
-      <h2 class="reveal d1" style="margin-top:16px; max-width:700px;">Onde cada area<br>vai sentir a evolucao.</h2>
+      <div class="section-header">
+        <div class="eyebrow reveal">08 · Mudanças por área</div>
+        <h2 class="reveal delay-1">Onde cada área<br>vai sentir a evolução.</h2>
+      </div>
 
-      <div class="compare reveal d2">
+      <div class="compare reveal delay-2">
         <div class="compare-row head">
-          <div class="compare-cell">Area</div>
-          <div class="compare-cell">AS IS &middot; Hoje</div>
-          <div class="compare-cell arrow">&rarr;</div>
-          <div class="compare-cell">TO BE &middot; Proposta</div>
+          <div class="compare-cell">Área</div>
+          <div class="compare-cell">AS IS · Hoje</div>
+          <div class="compare-cell arrow">→</div>
+          <div class="compare-cell">TO BE · Proposta</div>
         </div>
         <div class="compare-row">
           <div class="compare-cell area">Vendas</div>
           <div class="compare-cell asis">Consulta 7 portais ~10x ao dia.</div>
-          <div class="compare-cell arrow">&rarr;</div>
-          <div class="compare-cell tobe">Torre unica, atende por excecao.</div>
+          <div class="compare-cell arrow">→</div>
+          <div class="compare-cell tobe">Torre única, atende por exceção.</div>
         </div>
         <div class="compare-row">
           <div class="compare-cell area">RVA</div>
           <div class="compare-cell asis">Acompanha coleta reversa por e-mail.</div>
-          <div class="compare-cell arrow">&rarr;</div>
+          <div class="compare-cell arrow">→</div>
           <div class="compare-cell tobe">Status fidedigno no Lincros.</div>
         </div>
         <div class="compare-row">
           <div class="compare-cell area">Compras</div>
           <div class="compare-cell asis">Aprova spot por e-mail.</div>
-          <div class="compare-cell arrow">&rarr;</div>
-          <div class="compare-cell tobe">Aprova no sistema com alcada.</div>
+          <div class="compare-cell arrow">→</div>
+          <div class="compare-cell tobe">Aprova no sistema com alçada.</div>
         </div>
         <div class="compare-row">
           <div class="compare-cell area">GAC</div>
-          <div class="compare-cell asis">Agenda no TOTVS, e-mail a transportadora.</div>
-          <div class="compare-cell arrow">&rarr;</div>
-          <div class="compare-cell tobe">Embarque no Lincros, ordem automatica.</div>
+          <div class="compare-cell asis">Agenda no TOTVS, e-mail à transportadora.</div>
+          <div class="compare-cell arrow">→</div>
+          <div class="compare-cell tobe">Embarque no Lincros, ordem automática.</div>
         </div>
         <div class="compare-row">
-          <div class="compare-cell area">Expedicao</div>
+          <div class="compare-cell area">Expedição</div>
           <div class="compare-cell asis">Romaneio opcional.</div>
-          <div class="compare-cell arrow">&rarr;</div>
-          <div class="compare-cell tobe">Romaneio obrigatorio, vinculado a NF.</div>
+          <div class="compare-cell arrow">→</div>
+          <div class="compare-cell tobe">Romaneio obrigatório, vinculado à NF.</div>
         </div>
         <div class="compare-row">
           <div class="compare-cell area">Censos</div>
-          <div class="compare-cell asis">Romaneios fisicos, baixa manual.</div>
-          <div class="compare-cell arrow">&rarr;</div>
-          <div class="compare-cell tobe">Usuario externo no Lincros, baixa em tempo real.</div>
+          <div class="compare-cell asis">Romaneios físicos, baixa manual.</div>
+          <div class="compare-cell arrow">→</div>
+          <div class="compare-cell tobe">Usuário externo no Lincros, baixa em tempo real.</div>
         </div>
         <div class="compare-row">
           <div class="compare-cell area">Fiscal</div>
-          <div class="compare-cell asis">Lanca CT-e manual, concilia natureza.</div>
-          <div class="compare-cell arrow">&rarr;</div>
+          <div class="compare-cell asis">Lança CT-e manual, concilia natureza.</div>
+          <div class="compare-cell arrow">→</div>
           <div class="compare-cell tobe">CT-e integra no ERP, natureza sugerida.</div>
         </div>
         <div class="compare-row">
           <div class="compare-cell area">Controladoria</div>
           <div class="compare-cell asis">Confere planilha, valida por e-mail.</div>
-          <div class="compare-cell arrow">&rarr;</div>
-          <div class="compare-cell tobe">Painel de divergencias com fluxo de tratativa.</div>
+          <div class="compare-cell arrow">→</div>
+          <div class="compare-cell tobe">Painel de divergências com fluxo de tratativa.</div>
         </div>
         <div class="compare-row">
           <div class="compare-cell area">Financeiro</div>
           <div class="compare-cell asis">Recebe com 3 dias, corre para pagar.</div>
-          <div class="compare-cell arrow">&rarr;</div>
-          <div class="compare-cell tobe">Recebe com 5+ dias, ja auditado.</div>
+          <div class="compare-cell arrow">→</div>
+          <div class="compare-cell tobe">Recebe com 5+ dias, já auditado.</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- GANHOS -->
-  <section id="ganhos" class="overflow">
-    <span class="section-label">09 &middot; Ganhos</span>
+  <section id="ganhos" class="alt">
     <div class="container">
-      <div class="mono reveal">09 &middot; O que a Schulz ganha</div>
-      <h2 class="reveal d1" style="margin-top:16px; max-width:700px;">Operar com controle,<br>auditar com eficiencia.</h2>
+      <div class="section-header">
+        <div class="eyebrow cyan reveal">09 · O que a Schulz ganha</div>
+        <h2 class="reveal delay-1">Operar com controle,<br>auditar com eficiência.</h2>
+      </div>
 
-      <div class="ganhos-grid">
+      <div class="ganhos-list">
         <div class="ganho-item reveal">
           <div class="ganho-check"><svg viewBox="0 0 24 24"><polyline points="5,12 10,17 19,7"/></svg></div>
           <div class="ganho-text">
-            <h4>Torre unica, fim das multiplas consultas</h4>
-            <p>Status consolidado de todas as transportadoras em uma interface, com notificacao direta ao cliente final.</p>
+            <h4>Torre única, fim das múltiplas consultas</h4>
+            <p>Status consolidado de todas as transportadoras em uma interface, com notificação direta ao cliente final.</p>
           </div>
         </div>
-        <div class="ganho-item reveal d1">
+        <div class="ganho-item reveal delay-1">
           <div class="ganho-check"><svg viewBox="0 0 24 24"><polyline points="5,12 10,17 19,7"/></svg></div>
           <div class="ganho-text">
-            <h4>Fim das validacoes por e-mail</h4>
-            <p>Spot, taxas extras, agendamentos e instrucoes aprovados no sistema com registro completo.</p>
-          </div>
-        </div>
-        <div class="ganho-item reveal d2">
-          <div class="ganho-check"><svg viewBox="0 0 24 24"><polyline points="5,12 10,17 19,7"/></svg></div>
-          <div class="ganho-text">
-            <h4>Painel unico de divergencias</h4>
-            <p>Visao consolidada com status, responsavel e prazo de tratativa em uma tela so.</p>
-          </div>
-        </div>
-        <div class="ganho-item reveal d3">
-          <div class="ganho-check"><svg viewBox="0 0 24 24"><polyline points="5,12 10,17 19,7"/></svg></div>
-          <div class="ganho-text">
-            <h4>Evidencias automaticas para auditoria</h4>
-            <p>Auditoria externa sem cacar e-mails. Tudo registrado com data, hora e responsavel.</p>
-          </div>
-        </div>
-        <div class="ganho-item reveal d4">
-          <div class="ganho-check"><svg viewBox="0 0 24 24"><polyline points="5,12 10,17 19,7"/></svg></div>
-          <div class="ganho-text">
-            <h4>SLA documentado e contestavel</h4>
-            <p>Historico de previsoes e reagendamentos no sistema. Atraso real vs justificado fica rastreavel.</p>
+            <h4>Fim das validações por e-mail</h4>
+            <p>Spot, taxas extras, agendamentos e instruções aprovados no sistema com registro completo.</p>
           </div>
         </div>
         <div class="ganho-item reveal">
           <div class="ganho-check"><svg viewBox="0 0 24 24"><polyline points="5,12 10,17 19,7"/></svg></div>
           <div class="ganho-text">
-            <h4>Governanca que sustenta a torre no tempo</h4>
-            <p>Homologacao contratual obriga publicacao de status. A torre nao envelhece com transportadoras desligadas.</p>
+            <h4>Painel único de divergências</h4>
+            <p>Visão consolidada com status, responsável e prazo de tratativa em uma tela só.</p>
+          </div>
+        </div>
+        <div class="ganho-item reveal delay-1">
+          <div class="ganho-check"><svg viewBox="0 0 24 24"><polyline points="5,12 10,17 19,7"/></svg></div>
+          <div class="ganho-text">
+            <h4>Evidências automáticas para auditoria</h4>
+            <p>Auditoria externa sem caçar e-mails. Tudo registrado com data, hora e responsável.</p>
+          </div>
+        </div>
+        <div class="ganho-item reveal">
+          <div class="ganho-check"><svg viewBox="0 0 24 24"><polyline points="5,12 10,17 19,7"/></svg></div>
+          <div class="ganho-text">
+            <h4>SLA documentado e contestável</h4>
+            <p>Histórico de previsões e reagendamentos no sistema. Atraso real vs justificado fica rastreável.</p>
+          </div>
+        </div>
+        <div class="ganho-item reveal delay-1">
+          <div class="ganho-check"><svg viewBox="0 0 24 24"><polyline points="5,12 10,17 19,7"/></svg></div>
+          <div class="ganho-text">
+            <h4>Governança que sustenta a torre no tempo</h4>
+            <p>Homologação contratual obriga publicação de status. A torre não envelhece com transportadoras desligadas.</p>
           </div>
         </div>
       </div>
     </div>
   </section>
-
 </main>
 
 <footer>
   <div class="container">
-    <div class="mono" style="margin-bottom:28px;">Proximos passos</div>
-    <h2>Pronto para tirar do papel<br><span class="accent-text italic">com a Consolida.</span></h2>
-    <p class="lead" style="margin-top:20px;">BPO de auditoria de frete e governanca da malha de transporte para industrias que querem controle financeiro da logistica, nao so implementacao de software.</p>
+    <div class="eyebrow" style="margin-left: auto; margin-right: auto;">Próximos passos</div>
+    <h2>Pronto para tirar do papel<br><span class="accent">com a Consolida.</span></h2>
+    <p>BPO de auditoria de frete e governança da malha de transporte para indústrias que querem controle financeiro da logística, não só implementação de software.</p>
     <div class="contacts">
       <div class="contact-tag">@oconsolida</div>
       <div class="contact-tag">www.oconsolida.com.br</div>
       <div class="contact-tag">consolida-oficial</div>
       <div class="contact-tag">47 98433 5969</div>
     </div>
-    <div class="footer-meta">Consolida &copy; 2026 &middot; Todos os direitos reservados</div>
+    <div class="footer-meta">CONSOLIDA © 2026 · TODOS OS DIREITOS RESERVADOS</div>
   </div>
 </footer>
 
 <script>
-  // Progress bar
   const progress = document.getElementById('progress');
   const updateProgress = () => {
     const h = document.documentElement;
-    const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight);
+    const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
     progress.style.width = (scrolled * 100) + '%';
   };
 
-  // Reveal observer
   const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -1885,20 +1796,20 @@
         revealObserver.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+  }, { threshold: 0.12, rootMargin: '0px 0px -80px 0px' });
+
   document.querySelectorAll('.reveal:not(.in)').forEach(el => revealObserver.observe(el));
 
-  // Counter animation
   const counterObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         const el = entry.target;
         const target = parseInt(el.dataset.counter);
-        const duration = 1600;
+        const duration = 1400;
         const start = performance.now();
         const animate = (now) => {
           const t = Math.min((now - start) / duration, 1);
-          const eased = 1 - Math.pow(1 - t, 4);
+          const eased = 1 - Math.pow(1 - t, 3);
           el.textContent = Math.round(target * eased);
           if (t < 1) requestAnimationFrame(animate);
         };
@@ -1909,95 +1820,124 @@
   }, { threshold: 0.5 });
   document.querySelectorAll('[data-counter]').forEach(el => counterObserver.observe(el));
 
-  // Slide navigation
-  const allSections = Array.from(document.querySelectorAll('main section[id]'));
-  const slideNav = document.getElementById('slideNav');
-  const btnPrev = document.getElementById('btnPrev');
-  const btnNext = document.getElementById('btnNext');
-  const counterCurrent = document.getElementById('counterCurrent');
-  const counterTotal = document.getElementById('counterTotal');
-  const navCurrent = document.getElementById('navCurrent');
-  const navTotal = document.getElementById('navTotal');
-  const total = allSections.length;
-  counterTotal.textContent = total;
-  navTotal.textContent = total;
+  const sections = document.querySelectorAll('main section[id]');
+  const dots = document.querySelectorAll('.navdots a');
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        dots.forEach(d => {
+          d.classList.toggle('active', d.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { threshold: 0.4 });
+  sections.forEach(s => sectionObserver.observe(s));
 
-  function getCurrentIndex() {
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+
+  // ===== Section navigation (click + keyboard) =====
+  const allSections = Array.from(document.querySelectorAll('main section[id]'));
+  const secnav = document.getElementById('secnav');
+  const secnavPrev = document.getElementById('secnavPrev');
+  const secnavNext = document.getElementById('secnavNext');
+  const secnavCurrent = document.getElementById('secnavCurrent');
+  const secnavTotal = document.getElementById('secnavTotal');
+  secnavTotal.textContent = allSections.length;
+
+  function getCurrentSectionIndex() {
     const scrollY = window.scrollY;
-    const pivot = window.innerHeight * 0.4;
+    const pivot = window.innerHeight * 0.35;
     let current = 0;
     for (let i = 0; i < allSections.length; i++) {
-      if (allSections[i].offsetTop - pivot <= scrollY) current = i;
+      const top = allSections[i].offsetTop;
+      if (top - pivot <= scrollY) current = i;
       else break;
     }
     return current;
   }
 
-  function goTo(index) {
+  function scrollToSection(index) {
     const clamped = Math.max(0, Math.min(allSections.length - 1, index));
-    allSections[clamped].scrollIntoView({ behavior: 'smooth' });
+    const target = allSections[clamped];
+    if (!target) return;
+    window.scrollTo({
+      top: target.offsetTop,
+      behavior: 'smooth'
+    });
   }
 
-  function updateNav() {
-    const idx = getCurrentIndex();
-    const display = String(idx + 1).padStart(2, '0');
-    counterCurrent.textContent = display;
-    navCurrent.textContent = display;
-    btnPrev.disabled = idx === 0;
-    slideNav.classList.add('visible');
+  function updateSecnav() {
+    const idx = getCurrentSectionIndex();
+    secnavCurrent.textContent = idx + 1;
+    secnavPrev.disabled = idx === 0;
+
+    const isLast = idx === allSections.length - 1;
+    if (isLast) {
+      secnavNext.innerHTML = '<svg viewBox="0 0 24 24"><polyline points="18,15 12,9 6,15"/></svg>';
+      secnavNext.setAttribute('aria-label', 'Voltar ao início');
+      secnavNext.title = 'Voltar ao início';
+      secnavNext.dataset.action = 'top';
+    } else {
+      secnavNext.innerHTML = '<svg viewBox="0 0 24 24"><polyline points="6,9 12,15 18,9"/></svg>';
+      secnavNext.setAttribute('aria-label', 'Próxima seção');
+      secnavNext.title = 'Próxima seção (↓ ou Espaço)';
+      secnavNext.dataset.action = 'next';
+    }
+
+    // Show after a tiny delay on load
+    secnav.classList.add('visible');
   }
 
-  btnPrev.addEventListener('click', () => goTo(getCurrentIndex() - 1));
-  btnNext.addEventListener('click', () => {
-    const idx = getCurrentIndex();
-    if (idx === allSections.length - 1) window.scrollTo({ top: 0, behavior: 'smooth' });
-    else goTo(idx + 1);
+  secnavPrev.addEventListener('click', () => {
+    scrollToSection(getCurrentSectionIndex() - 1);
   });
 
-  // Keyboard navigation
-  let kbLock = false;
+  secnavNext.addEventListener('click', () => {
+    if (secnavNext.dataset.action === 'top') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      scrollToSection(getCurrentSectionIndex() + 1);
+    }
+  });
+
+  // Keyboard support
+  let kbDebounce = false;
   document.addEventListener('keydown', (e) => {
+    // Don't interfere with text fields
     const tag = (e.target.tagName || '').toLowerCase();
     if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
+
     let handled = false;
-    if ((e.key === 'ArrowDown' || e.key === ' ' || e.key === 'j') && !kbLock) {
-      goTo(getCurrentIndex() + 1); handled = true;
-    } else if ((e.key === 'ArrowUp' || e.key === 'k') && !kbLock) {
-      goTo(getCurrentIndex() - 1); handled = true;
+
+    if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ' || e.key === 'j') {
+      if (!kbDebounce) {
+        scrollToSection(getCurrentSectionIndex() + 1);
+        handled = true;
+      }
+    } else if (e.key === 'ArrowUp' || e.key === 'PageUp' || e.key === 'k') {
+      if (!kbDebounce) {
+        scrollToSection(getCurrentSectionIndex() - 1);
+        handled = true;
+      }
+    } else if (e.key === 'Home') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      handled = true;
+    } else if (e.key === 'End') {
+      window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+      handled = true;
     }
-    if (handled) { e.preventDefault(); kbLock = true; setTimeout(() => kbLock = false, 600); }
+
+    if (handled) {
+      e.preventDefault();
+      kbDebounce = true;
+      setTimeout(() => { kbDebounce = false; }, 600);
+    }
   });
 
-  // Truck progress
-  const truckContainer = document.getElementById('truckContainer');
-  let lastScroll = 0;
-  let scrollTimeout;
-
-  function updateTruck() {
-    const h = document.documentElement;
-    const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight);
-    // Truck goes from -5% to 85% of viewport width
-    const truckPos = -5 + (scrolled * 90);
-    truckContainer.style.left = truckPos + '%';
-
-    // Detect if scrolling stopped
-    const currentScroll = h.scrollTop;
-    if (currentScroll !== lastScroll) {
-      truckContainer.classList.remove('stopped');
-    }
-    lastScroll = currentScroll;
-
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(() => {
-      truckContainer.classList.add('stopped');
-    }, 150);
-  }
-
-  window.addEventListener('scroll', () => { updateProgress(); updateNav(); updateTruck(); }, { passive: true });
-  setTimeout(updateNav, 100);
-  updateProgress();
-  updateTruck();
-  truckContainer.classList.add('stopped');
+  window.addEventListener('scroll', updateSecnav, { passive: true });
+  setTimeout(updateSecnav, 100);
 </script>
 </body>
 </html>
