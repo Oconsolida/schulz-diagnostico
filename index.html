@@ -1100,7 +1100,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 64px;
+    height: 80px;
     z-index: 150;
     pointer-events: none;
     overflow: hidden;
@@ -1110,108 +1110,71 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 28px;
-    background: linear-gradient(180deg, rgba(10,10,15,0) 0%, rgba(10,10,15,0.95) 30%, #0d0d14 100%);
+    height: 20px;
+    background: linear-gradient(180deg, rgba(10,10,15,0) 0%, rgba(10,10,15,0.9) 40%, #0d0d14 100%);
   }
   .truck-road::before {
     content: '';
     position: absolute;
-    top: 14px;
+    top: 10px;
     left: 0;
     right: 0;
     height: 2px;
-    background: repeating-linear-gradient(90deg, rgba(255,255,255,0.12) 0px, rgba(255,255,255,0.12) 24px, transparent 24px, transparent 48px);
-  }
-  .truck-road::after {
-    content: '';
-    position: absolute;
-    top: 8px;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: rgba(255,255,255,0.06);
+    background: repeating-linear-gradient(90deg, rgba(255,255,255,0.1) 0px, rgba(255,255,255,0.1) 20px, transparent 20px, transparent 40px);
   }
 
   .truck-container {
     position: absolute;
-    bottom: 6px;
-    left: -10%;
+    bottom: 4px;
+    left: -15%;
     transition: left 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-    filter: drop-shadow(0 2px 12px rgba(0, 210, 190, 0.25));
+    filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.5));
   }
 
-  .truck-svg {
-    width: 120px;
-    height: 52px;
-  }
-
-  .truck-logo {
-    position: absolute;
-    top: 4px;
-    left: 26px;
-    width: 52px;
-    height: 18px;
-    object-fit: contain;
-    opacity: 0.95;
+  .truck-img {
+    width: 180px;
+    height: auto;
+    display: block;
   }
 
   .truck-exhaust {
     position: absolute;
-    bottom: 14px;
-    left: -4px;
+    bottom: 24px;
+    left: -6px;
     width: 20px;
-    height: 8px;
+    height: 10px;
     pointer-events: none;
   }
   .truck-exhaust span {
     position: absolute;
-    width: 4px;
-    height: 4px;
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.15);
-    animation: exhaust 1.2s ease-out infinite;
+    background: rgba(255,255,255,0.12);
+    animation: exhaust 1.4s ease-out infinite;
   }
   .truck-exhaust span:nth-child(2) {
-    animation-delay: 0.3s;
+    animation-delay: 0.35s;
     left: 4px;
-    bottom: 2px;
+    bottom: 3px;
   }
   .truck-exhaust span:nth-child(3) {
-    animation-delay: 0.6s;
+    animation-delay: 0.7s;
     left: 8px;
   }
-  @keyframes exhaust {
-    0% { opacity: 0.4; transform: translate(0, 0) scale(1); }
-    100% { opacity: 0; transform: translate(-16px, -6px) scale(2.5); }
-  }
-
-  /* Wheel spin */
-  .wheel-spin {
-    animation: spin 0.6s linear infinite;
-    transform-origin: center;
-  }
-  .truck-container.stopped .wheel-spin {
+  .truck-container.stopped .truck-exhaust span {
     animation-play-state: paused;
+    opacity: 0;
   }
-  @keyframes spin {
-    100% { transform: rotate(360deg); }
-  }
-
-  /* Headlight glow */
-  .truck-headlight {
-    position: absolute;
-    top: 18px;
-    right: -8px;
-    width: 40px;
-    height: 16px;
-    background: radial-gradient(ellipse at left center, rgba(255,240,200,0.3), transparent 70%);
-    pointer-events: none;
+  @keyframes exhaust {
+    0% { opacity: 0.3; transform: translate(0, 0) scale(1); }
+    100% { opacity: 0; transform: translate(-20px, -8px) scale(3); }
   }
 
   /* Destination flag */
   .truck-destination {
     position: fixed;
-    bottom: 30px;
+    bottom: 36px;
     right: 32px;
     z-index: 149;
     pointer-events: none;
@@ -1237,9 +1200,8 @@
   }
 
   @media (max-width: 768px) {
-    .truck-svg { width: 80px; height: 35px; }
-    .truck-logo { width: 34px; height: 12px; top: 3px; left: 18px; }
-    .truck-track { height: 48px; }
+    .truck-img { width: 120px; }
+    .truck-track { height: 60px; }
     .truck-destination { display: none; }
   }
 </style>
@@ -1252,56 +1214,7 @@
   <div class="truck-road"></div>
   <div class="truck-container" id="truckContainer">
     <div class="truck-exhaust"><span></span><span></span><span></span></div>
-    <svg class="truck-svg" viewBox="0 0 120 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Trailer body -->
-      <rect x="4" y="4" width="72" height="32" rx="3" fill="#1a1a2e" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-      <rect x="5" y="5" width="70" height="30" rx="2" fill="#12122a"/>
-      <!-- Trailer accent stripe -->
-      <rect x="4" y="32" width="72" height="4" rx="0" fill="var(--accent)" opacity="0.7"/>
-      <!-- Cab -->
-      <path d="M76 12 L76 36 L104 36 L108 28 L108 20 Q108 12 100 12 Z" fill="#1e1e34" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-      <!-- Windshield -->
-      <path d="M100 14 L104 14 L108 22 L108 20 Q108 14 102 14 Z" fill="rgba(0,210,190,0.25)" stroke="rgba(0,210,190,0.3)" stroke-width="0.5"/>
-      <!-- Cab window -->
-      <rect x="80" y="14" width="16" height="10" rx="1.5" fill="rgba(0,210,190,0.12)" stroke="rgba(0,210,190,0.2)" stroke-width="0.5"/>
-      <!-- Connector -->
-      <rect x="74" y="30" width="4" height="6" fill="#1a1a2e"/>
-      <!-- Chassis -->
-      <rect x="2" y="36" width="108" height="3" rx="1" fill="#0f0f1f"/>
-      <!-- Rear wheel -->
-      <g transform="translate(24, 42)">
-        <circle cx="0" cy="0" r="7" fill="#0a0a14" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
-        <circle cx="0" cy="0" r="3.5" fill="#16161f" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
-        <g class="wheel-spin">
-          <line x1="-2.5" y1="0" x2="2.5" y2="0" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
-          <line x1="0" y1="-2.5" x2="0" y2="2.5" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
-        </g>
-      </g>
-      <!-- Mid wheel -->
-      <g transform="translate(56, 42)">
-        <circle cx="0" cy="0" r="7" fill="#0a0a14" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
-        <circle cx="0" cy="0" r="3.5" fill="#16161f" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
-        <g class="wheel-spin">
-          <line x1="-2.5" y1="0" x2="2.5" y2="0" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
-          <line x1="0" y1="-2.5" x2="0" y2="2.5" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
-        </g>
-      </g>
-      <!-- Front wheel -->
-      <g transform="translate(94, 42)">
-        <circle cx="0" cy="0" r="6.5" fill="#0a0a14" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
-        <circle cx="0" cy="0" r="3" fill="#16161f" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
-        <g class="wheel-spin">
-          <line x1="-2" y1="0" x2="2" y2="0" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
-          <line x1="0" y1="-2" x2="0" y2="2" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
-        </g>
-      </g>
-      <!-- Headlight -->
-      <rect x="107" y="26" width="3" height="4" rx="1" fill="#ffeebb" opacity="0.8"/>
-      <!-- Tail light -->
-      <rect x="2" y="28" width="2" height="4" rx="1" fill="#f43f5e" opacity="0.6"/>
-    </svg>
-    <img class="truck-logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAYYAAACWCAYAAADaIS/KAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQyIDc5LjE2MDkyNCwgMjAxNy8wNy8xMy0wMTowNjozOSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpFNzM2NjAxRUU2N0MxMUU4ODE4MUQ2OTVBQkM4MDNDOCIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpFNzM2NjAxRkU2N0MxMUU4ODE4MUQ2OTVBQkM4MDNDOCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkU3MzY2MDFDRTY3QzExRTg4MTgxRDY5NUFCQzgwM0M4IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkU3MzY2MDFERTY3QzExRTg4MTgxRDY5NUFCQzgwM0M4Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+F4P9HQAAFplJREFUeNrsnQuYXVV1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" alt="Schulz">
-    <div class="truck-headlight"></div>
+    <img class="truck-img" src="truck.png" alt="Caminhao Schulz">
   </div>
 </div>
 <div class="truck-destination">
