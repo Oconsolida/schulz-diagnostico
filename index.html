@@ -1138,10 +1138,270 @@
     .secnav { bottom: 16px; right: 16px; padding: 8px 10px 8px 14px; }
     .secnav-hint { display: none; }
   }
+
+  /* ===== TV MODE TOGGLE ===== */
+  .tv-toggle {
+    position: fixed;
+    top: 24px;
+    right: 32px;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(253, 253, 251, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-mid);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: all 0.3s;
+    box-shadow: var(--shadow-sm);
+  }
+  .tv-toggle:hover {
+    border-color: var(--purple);
+    color: var(--purple);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+  .tv-toggle svg {
+    width: 16px; height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .tv-toggle .label-on { display: none; }
+  .tv-active .tv-toggle .label-off { display: none; }
+  .tv-active .tv-toggle .label-on { display: inline; }
+  .tv-active .tv-toggle {
+    background: var(--purple);
+    color: #fff;
+    border-color: var(--purple);
+  }
+
+  @media (max-width: 720px) {
+    .tv-toggle { top: auto; bottom: 16px; right: auto; left: 16px; }
+  }
+
+  /* ===== TV MODE STYLES ===== */
+  .tv-active { overflow: hidden; }
+
+  .tv-active .topnav,
+  .tv-active .navdots,
+  .tv-active .secnav,
+  .tv-active .scrollhint,
+  .tv-active .progress { display: none !important; opacity: 0 !important; }
+
+  .tv-active .tv-toggle {
+    top: 20px;
+    right: 20px;
+  }
+
+  .tv-active main {
+    position: relative;
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  .tv-active section,
+  .tv-active footer {
+    position: absolute;
+    inset: 0;
+    min-height: 100vh;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 80px 80px 60px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(60px);
+    transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+                visibility 0s 0.5s;
+  }
+  .tv-active section.tv-slide-active,
+  .tv-active footer.tv-slide-active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+    transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+                visibility 0s 0s;
+    z-index: 5;
+  }
+  .tv-active section.tv-slide-exit {
+    opacity: 0;
+    transform: translateX(-60px);
+    visibility: hidden;
+    transition: opacity 0.4s, transform 0.4s, visibility 0s 0.4s;
+    z-index: 4;
+  }
+
+  /* TV font scaling */
+  .tv-active h1 { font-size: clamp(56px, 7.5vw, 100px); }
+  .tv-active h2 { font-size: clamp(40px, 5.5vw, 72px); }
+  .tv-active h3 { font-size: clamp(24px, 2.8vw, 32px); }
+  .tv-active .lead { font-size: clamp(19px, 1.8vw, 24px); max-width: 780px; }
+  .tv-active .stat-num { font-size: clamp(56px, 7vw, 84px); }
+
+  /* TV reveal override — show everything immediately */
+  .tv-active .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+
+  /* TV slide counter bar */
+  .tv-bar {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 50;
+    padding: 16px 32px;
+    background: rgba(253, 253, 251, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    align-items: center;
+    justify-content: space-between;
+  }
+  .tv-active .tv-bar { display: flex; }
+
+  .tv-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .tv-bar-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .tv-bar-logo .dot {
+    width: 8px; height: 8px;
+    border-radius: 3px;
+    background: var(--cyan);
+  }
+  .tv-bar-sep {
+    width: 1px;
+    height: 20px;
+    background: var(--border-strong);
+  }
+  .tv-bar-client {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .tv-bar-center {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .tv-pip {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--border-strong);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .tv-pip:hover { background: var(--purple-soft); transform: scale(1.3); }
+  .tv-pip.active {
+    background: var(--purple);
+    box-shadow: 0 0 0 3px var(--purple-tint);
+    transform: scale(1.2);
+  }
+
+  .tv-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .tv-bar-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text-mid);
+    font-weight: 600;
+    min-width: 48px;
+    text-align: center;
+  }
+  .tv-bar-counter strong { color: var(--purple); font-size: 18px; }
+
+  .tv-bar-btn {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s;
+    padding: 0;
+  }
+  .tv-bar-btn:hover:not(:disabled) {
+    background: var(--purple);
+    border-color: var(--purple);
+    color: #fff;
+  }
+  .tv-bar-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+  .tv-bar-btn svg {
+    width: 18px; height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .tv-bar-key {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+  }
 </style>
 </head>
 <body>
 <div class="progress" id="progress"></div>
+
+<button class="tv-toggle" id="tvToggle" title="Modo TV (T)">
+  <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+  <span class="label-off">Modo TV</span>
+  <span class="label-on">Sair TV</span>
+</button>
+
+<div class="tv-bar" id="tvBar">
+  <div class="tv-bar-left">
+    <div class="tv-bar-logo"><span class="dot"></span> consolida</div>
+    <div class="tv-bar-sep"></div>
+    <span class="tv-bar-client">Schulz S.A. · 30 Abr 2026</span>
+  </div>
+  <div class="tv-bar-center" id="tvPips"></div>
+  <div class="tv-bar-right">
+    <span class="tv-bar-key">← →</span>
+    <button class="tv-bar-btn" id="tvPrev" aria-label="Anterior">
+      <svg viewBox="0 0 24 24"><polyline points="15,6 9,12 15,18"/></svg>
+    </button>
+    <span class="tv-bar-counter"><strong id="tvCurrent">1</strong> / <span id="tvTotal">13</span></span>
+    <button class="tv-bar-btn" id="tvNext" aria-label="Próximo">
+      <svg viewBox="0 0 24 24"><polyline points="9,6 15,12 9,18"/></svg>
+    </button>
+  </div>
+</div>
 
 <div class="secnav" id="secnav">
   <span class="secnav-counter"><strong id="secnavCurrent">1</strong> / <span id="secnavTotal">13</span></span>
@@ -2169,6 +2429,134 @@
 
   window.addEventListener('scroll', updateSecnav, { passive: true });
   setTimeout(updateSecnav, 100);
+
+  // ===== TV MODE =====
+  const tvToggle = document.getElementById('tvToggle');
+  const tvBar = document.getElementById('tvBar');
+  const tvPips = document.getElementById('tvPips');
+  const tvPrev = document.getElementById('tvPrev');
+  const tvNext = document.getElementById('tvNext');
+  const tvCurrentEl = document.getElementById('tvCurrent');
+  const tvTotalEl = document.getElementById('tvTotal');
+
+  // Collect all slides (sections + footer)
+  const tvSlides = [...document.querySelectorAll('main section[id], footer')];
+  let tvIndex = 0;
+  let tvActive = false;
+
+  tvTotalEl.textContent = tvSlides.length;
+
+  // Build pips
+  tvSlides.forEach((_, i) => {
+    const pip = document.createElement('span');
+    pip.className = 'tv-pip' + (i === 0 ? ' active' : '');
+    pip.addEventListener('click', () => tvGoTo(i));
+    tvPips.appendChild(pip);
+  });
+
+  function tvGoTo(idx) {
+    if (idx < 0 || idx >= tvSlides.length || idx === tvIndex) return;
+    const prev = tvSlides[tvIndex];
+    const next = tvSlides[idx];
+
+    prev.classList.remove('tv-slide-active');
+    prev.classList.add('tv-slide-exit');
+    setTimeout(() => prev.classList.remove('tv-slide-exit'), 500);
+
+    next.classList.add('tv-slide-active');
+    next.scrollTop = 0;
+
+    tvIndex = idx;
+    tvUpdateUI();
+  }
+
+  function tvUpdateUI() {
+    tvCurrentEl.textContent = tvIndex + 1;
+    tvPrev.disabled = tvIndex === 0;
+    tvNext.disabled = tvIndex === tvSlides.length - 1;
+    tvPips.querySelectorAll('.tv-pip').forEach((p, i) => {
+      p.classList.toggle('active', i === tvIndex);
+    });
+  }
+
+  function tvEnter() {
+    tvActive = true;
+    document.body.classList.add('tv-active');
+    // Find which section is currently visible and start there
+    const scrollIdx = getCurrentSectionIndex();
+    tvIndex = Math.min(scrollIdx, tvSlides.length - 1);
+    tvSlides.forEach((s, i) => {
+      s.classList.remove('tv-slide-active', 'tv-slide-exit');
+      if (i === tvIndex) s.classList.add('tv-slide-active');
+    });
+    tvUpdateUI();
+    // Try fullscreen
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    }
+  }
+
+  function tvExit() {
+    tvActive = false;
+    document.body.classList.remove('tv-active');
+    tvSlides.forEach(s => s.classList.remove('tv-slide-active', 'tv-slide-exit'));
+    // Scroll to the section we were on
+    if (allSections[tvIndex]) {
+      window.scrollTo({ top: allSections[tvIndex].offsetTop, behavior: 'instant' });
+    }
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {});
+    }
+  }
+
+  tvToggle.addEventListener('click', () => {
+    if (tvActive) tvExit(); else tvEnter();
+  });
+
+  tvPrev.addEventListener('click', () => tvGoTo(tvIndex - 1));
+  tvNext.addEventListener('click', () => tvGoTo(tvIndex + 1));
+
+  // Override keyboard in TV mode
+  document.addEventListener('keydown', (e) => {
+    if (!tvActive) return;
+    const tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea') return;
+
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      tvGoTo(tvIndex + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') {
+      e.preventDefault();
+      tvGoTo(tvIndex - 1);
+    } else if (e.key === 'Escape' || e.key === 't' || e.key === 'T') {
+      e.preventDefault();
+      tvExit();
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      tvGoTo(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      tvGoTo(tvSlides.length - 1);
+    }
+  }, true);
+
+  // T key to toggle TV mode (when not in TV mode)
+  document.addEventListener('keydown', (e) => {
+    if (tvActive) return;
+    const tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea') return;
+    if (e.key === 't' || e.key === 'T') {
+      e.preventDefault();
+      tvEnter();
+    }
+  });
+
+  // Exit TV on fullscreen exit
+  document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement && tvActive) {
+      tvExit();
+    }
+  });
 </script>
 </body>
 </html>
